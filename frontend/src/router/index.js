@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import UserLogin from '../components/UserLogin.vue'
+import UserRegister from '../components/UserRegister.vue'
 
 Vue.use(VueRouter)
 
@@ -17,8 +18,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/user/login',
+    path: '/customer/login',
     component: UserLogin
+  },
+  {
+    path: '/customer/register',
+    component: UserRegister
   }
 ]
 
