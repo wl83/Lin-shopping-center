@@ -26,8 +26,8 @@
       </div>
       <div class="login-form">
         <el-form ref="customerLoginFormRef" :model="customerLoginForm" :rules="customerLoginFormRules">
-          <el-form-item class="form-item" prop="phone">
-            <el-input v-model="customerLoginForm.phone" class="form-item-input" placeholder="请输入手机号码" prefix-icon="el-icon-user"></el-input>
+          <el-form-item class="form-item" prop="username">
+            <el-input v-model="customerLoginForm.username" class="form-item-input" placeholder="请输入手机号码" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
           <el-form-item class="form-item" prop="password">
             <el-input v-model="customerLoginForm.password" class="form-item-input" id="form-item-input-password" placeholder="请输入密码" type="password" prefix-icon="el-icon-lock"></el-input>
@@ -56,14 +56,14 @@ export default {
   data () {
     return {
       customerLoginForm: {
-        phone: '',
+        username: '',
         password: ''
       },
       searchQuery: {
         text: ''
       },
       customerLoginFormRules: {
-        phone: [
+        username: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         password: [
@@ -79,12 +79,17 @@ export default {
         if (!valid) {
           return
         }
-        const { data: res } = await this.$http.post('/customer', this.customerLoginForm)
+        const { data: res } = await this.$http.post('login', this.customerLoginForm)
+
+        console.log(res)
 
         if (res.meta.status !== 200) {
           return this.$message.error('登录失败!')
         } else {
+          // 登录成功后的操作
           this.$message.success('登录成功!')
+          window.sessionStorage.setItem('token', res.data.token)
+          this.$router.push('/')
         }
       })
     },
@@ -96,39 +101,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  header{
-    width: 100%;
-    height: 60px;
-    border: 1px solid rgb(214, 214, 214);
-  }
-  .login-logo{
-    width: 200px;
-    float: left;
-    padding-top: 15px;
-    margin-left: 100px;
-  }
-  .search-query{
-    width: 300px;
-    float: left;
-    padding-top: 10px;
-  }
-  .nav-menu{
-    width: 400px;
-    float: right;
-  }
-  .login-logo a{
-    text-align: center;
-    text-decoration: none;
-    margin-top: 20px;
-  }
-  .login-logo span{
-    color: #409EFF;
-    font-size: 20px;
-  }
-  .search-query-input{
-    width: 300px;
-    margin-left: 200px;
-  }
   .login-grid{
     height: 400px;
     width: 40%;
