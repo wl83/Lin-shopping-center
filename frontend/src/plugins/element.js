@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, Select, Option, Upload, Image } from 'element-ui'
+import { Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, Select, Option, Upload, Image, Carousel, CarouselItem, InputNumber, Avatar } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -12,5 +12,9 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Upload)
 Vue.use(Image)
+Vue.use(Carousel)
+Vue.use(CarouselItem)
+Vue.use(InputNumber)
+Vue.use(Avatar)
 
 Vue.prototype.$message = Message

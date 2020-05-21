@@ -21,8 +21,8 @@
   .item-price{
     width: 350px;
     height: 100px;
-    top: 57%;
-    position: absolute;
+    top: 12%;
+    position: relative;
   }
   .item-price .price{
     font-size: 50px;
@@ -33,7 +33,7 @@
   .shop-link{
     float: left;
     width: 110px;
-    top: 45%;
+    top: 30%;
     position: relative;
     /* transform: translate(-50%); */
   }
@@ -41,15 +41,15 @@
     color: rgb(149, 149, 149);
     width: 100px;
     float: left;
-    top: 43%;
+    top: 30%;
     position: absolute;
     margin-left: 20px;
   }
   .in-cart{
     width: 350px;
     height: 70px;
-    top: 72%;
-    position: absolute;
+    top: 10%;
+    position: relative;
   }
   .in-cart-btn{
     text-align: center;
