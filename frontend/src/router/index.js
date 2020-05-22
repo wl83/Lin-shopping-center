@@ -6,6 +6,11 @@ import UserRegister from '../components/UserRegister.vue'
 import Item from '../views/item/item.vue'
 import Customer from '../views/customer/customer.vue'
 import Shop from '../views/shop/shop.vue'
+import Address from '../views/customer/address.vue'
+import AddAddress from '../views/customer/addaddress.vue'
+import Cart from '../views/customer/cart.vue'
+import CartSubmit from '../views/customer/cartsubmit.vue'
+import CustomerOrder from '../views/customer/customerorder.vue'
 
 Vue.use(VueRouter)
 
@@ -28,12 +33,32 @@ const routes = [
     component: Item
   },
   {
-    path: '/customer/:customer_id',
+    path: '/customer',
     component: Customer
   },
   {
     path: '/shop/:shop_id',
     component: Shop
+  },
+  {
+    path: '/customer/address',
+    component: Address
+  },
+  {
+    path: '/customer/address/add',
+    component: AddAddress
+  },
+  {
+    path: '/customer/cart',
+    component: Cart
+  },
+  {
+    path: '/customer/cart/submit',
+    component: CartSubmit
+  },
+  {
+    path: '/customer/orders',
+    component: CustomerOrder
   }
 ]
 
