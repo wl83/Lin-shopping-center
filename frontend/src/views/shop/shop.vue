@@ -34,6 +34,9 @@
       <div class="shop-info-star">
         <p>评价等级：</p>
       </div>
+      <div class="add-item-container">
+        <el-button class="add-item-btn" type="success">添加商品</el-button>
+      </div>
     </div>
   </div>
   <div class="shop-item-list">
@@ -108,6 +111,8 @@ export default {
 .shop-info-star{
   border: 1px solid;
   height: 90px;
+  width: 50%;
+  float: left;
 }
 .shop-item-list{
   width: 100%;
@@ -115,5 +120,17 @@ export default {
   border: 1px solid;
   margin-top: 30px;
 }
-
+.add-item-container{
+  width: 49%;
+  height: 90px;
+  float: left;
+  border: 1px solid;
+}
+.add-item-btn{
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  position: relative;
+  width: 120px;
+}
 </style>

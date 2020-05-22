@@ -11,6 +11,7 @@ import AddAddress from '../views/customer/addaddress.vue'
 import Cart from '../views/customer/cart.vue'
 import CartSubmit from '../views/customer/cartsubmit.vue'
 import CustomerOrder from '../views/customer/customerorder.vue'
+import CustomerReview from '../views/customer/customerreview.vue'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,10 @@ const routes = [
   {
     path: '/customer/orders',
     component: CustomerOrder
+  },
+  {
+    path: '/customer/reviews',
+    component: CustomerReview
   }
 ]
 
