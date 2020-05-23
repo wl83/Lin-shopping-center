@@ -1,9 +1,15 @@
 .item-grid{
-    width: 350px;
+    width: 100%;
     height: 70%;
+    float: left;
+  }
+  .grid{
+    width: 29.8%;
+    height: 100%;
     border: 1px solid rgb(158, 158, 158);
     margin: 20px;
     float: left;
+    position: relative;
     margin-top: 90px;
   }
   .item-image-grid{
@@ -25,7 +31,7 @@
     position: relative;
   }
   .item-price .price{
-    font-size: 50px;
+    font-size: 30px;
     float: left;
     top: 50%;
     position: relative;

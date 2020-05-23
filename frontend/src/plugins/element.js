@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, MessageBox, Select, Option, Upload, Image, Carousel, CarouselItem, InputNumber, Avatar, Drawer, Rate, Progress, Loading } from 'element-ui'
+import { Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, MessageBox, Select, Option, Upload, Image, Carousel, CarouselItem, InputNumber, Avatar, Drawer, Rate, Progress, Loading, Pagination } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -21,6 +21,7 @@ Vue.use(Rate)
 Vue.use(Progress)
 Vue.use(Loading)
 Vue.use(MessageBox)
+Vue.use(Pagination)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

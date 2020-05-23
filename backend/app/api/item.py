@@ -6,7 +6,7 @@ from flask_restplus import Resource, reqparse
 from base64 import b64decode, b64encode
 
 # the number of each group of reviews
-GROUP_COUNT = 6
+GROUP_COUNT = 3
 
 item_post_parser = reqparse.RequestParser()
 item_post_parser.add_argument('name', required=True)

@@ -9,7 +9,7 @@
         <el-button class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
       </div>
       <div class="scroll-pict">
-        <itemgrid></itemgrid>
+        <itemgrid :items="items"></itemgrid>
       </div>
       <div class="right-arrow">
         <el-button class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
@@ -25,6 +25,34 @@ export default {
   components: {
     navbar,
     itemgrid
+  },
+  data () {
+    return {
+      items: []
+    }
+  },
+  mounted: function () {
+    this.$http.get('item/search', {}).then(response => {
+      const itemIds = response.data.item_ids
+
+      itemIds.forEach(id => {
+        this.$http.get('items/' + id, {}).then(response => {
+          const item = {}
+          item.name = response.data.name
+          item.current_price = response.data.current_price
+          item.original_price = response.data.original_price
+          item.in_stock = response.data.in_stock
+          item.info = response.data.info
+          item.sales = response.data.sales
+          item.shop_id = response.data.shop_id
+          item.images = response.data.images
+          item.item_id = id
+          this.items.push(item)
+        }).catch(err => {
+          console.error(err)
+        })
+      })
+    })
   }
 }
 </script>

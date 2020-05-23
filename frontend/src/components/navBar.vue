@@ -4,7 +4,8 @@
       <a href="/#/"><span>Lin-Shopping</span></a>
     </div>
     <div class="search-query">
-      <el-input placeholder="请输入内容" class="search-query-input" v-model="searchQuery.text" clearable prefix-icon="el-icon-search"></el-input>
+      <el-input @keydown.enter.native="handleSearch" placeholder="请输入内容" class="search-query-input" v-model="searchQuery.text" clearable prefix-icon="el-icon-search"></el-input>
+      <el-button @click="handleSearch" class="search-btn" slot="append" icon="el-icon-search"></el-button>
     </div>
     <div class="nav-menu">
       <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -41,6 +42,9 @@ export default {
           break
         }
       }
+    },
+    handleSearch () {
+      this.$router.push({ path: 'search', query: { itemName: this.searchQuery.text } })
     }
   }
 }

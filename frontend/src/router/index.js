@@ -13,6 +13,7 @@ import Cart from '../views/customer/cart.vue'
 import CartSubmit from '../views/customer/cartsubmit.vue'
 import CustomerOrder from '../views/customer/customerorder.vue'
 import CustomerReview from '../views/customer/customerreview.vue'
+import Search from '../views/home/search.vue'
 
 Vue.use(VueRouter)
 
@@ -69,6 +70,10 @@ const routes = [
   {
     path: '/customer/reviews',
     component: CustomerReview
+  },
+  {
+    path: '/search',
+    component: Search
   }
 ]
 

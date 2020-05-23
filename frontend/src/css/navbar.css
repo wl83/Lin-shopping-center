@@ -10,7 +10,8 @@ header{
     margin-left: 100px;
   }
   .search-query{
-    width: 600px;
+    width: 650px;
+    height: 60px;
     float: left;
     padding-top: 10px;
   }
@@ -30,4 +31,8 @@ header{
   .search-query-input{
     width: 300px;
     margin-left: 250px;
+    float: left;
+  }
+  .search-btn{
+    float: left;
   }
