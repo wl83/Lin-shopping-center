@@ -11,7 +11,7 @@ import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://localhost:80/api/'
 
 new Vue({
   router,

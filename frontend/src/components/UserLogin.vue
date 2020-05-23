@@ -1,23 +1,7 @@
 <template>
   <div class="login-container">
     <header>
-      <div class="nav-bar">
-        <div class="login-logo">
-          <a href=""><span>Lin-Shopping</span></a>
-        </div>
-        <div class="search-query">
-          <el-input placeholder="请输入内容" class="search-query-input" v-model="searchQuery.text" clearable prefix-icon="el-icon-search"></el-input>
-        </div>
-        <div class="nav-menu">
-          <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <!-- :default-active="activeIndex"   -->
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">购物</el-menu-item>
-            <el-menu-item index="3">购物车</el-menu-item>
-            <el-menu-item index="4">个人中心</el-menu-item>
-          </el-menu>
-        </div>
-      </div>
+      <navbar></navbar>
     </header>
 
     <div class="login-grid">
@@ -26,8 +10,8 @@
       </div>
       <div class="login-form">
         <el-form ref="customerLoginFormRef" :model="customerLoginForm" :rules="customerLoginFormRules">
-          <el-form-item class="form-item" prop="username">
-            <el-input v-model="customerLoginForm.username" class="form-item-input" placeholder="请输入手机号码" prefix-icon="el-icon-user"></el-input>
+          <el-form-item class="form-item" prop="phone">
+            <el-input v-model="customerLoginForm.phone" class="form-item-input" placeholder="请输入手机号码" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
           <el-form-item class="form-item" prop="password">
             <el-input v-model="customerLoginForm.password" class="form-item-input" id="form-item-input-password" placeholder="请输入密码" type="password" prefix-icon="el-icon-lock"></el-input>
@@ -35,13 +19,13 @@
           <div style="height: 40px;"></div>
           <el-form-item>
             <div class="form-item-link" id="form-item-link-top">
-              <el-link class="form-item-link-top" icon="el-icon-goods">商店登录</el-link>
+              <el-link href="/#/shop/login" class="form-item-link-top" icon="el-icon-goods">商店登录</el-link>
             </div>
             <div class="form-item-btn">
               <el-button class="login-btn" type="primary" @click="userLogin">登录</el-button>
             </div>
             <div class="form-item-link">
-              <el-link class="form-item-link-bottom" icon="el-icon-edit">立即注册</el-link>
+              <el-link href="/#/customer/register" class="form-item-link-bottom" icon="el-icon-edit">立即注册</el-link>
             </div>
           </el-form-item>
         </el-form>
@@ -52,18 +36,19 @@
 
 <script type="text/javascript" src="./bower_components/mockjs/dist/mock.js"></script>
 <script>
+import navbar from './navBar.vue'
 export default {
+  components: {
+    navbar
+  },
   data () {
     return {
       customerLoginForm: {
-        username: '',
+        phone: '',
         password: ''
       },
-      searchQuery: {
-        text: ''
-      },
       customerLoginFormRules: {
-        username: [
+        phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         password: [
@@ -79,22 +64,32 @@ export default {
         if (!valid) {
           return
         }
-        const { data: res } = await this.$http.post('login', this.customerLoginForm)
-
-        console.log(res)
-
-        if (res.meta.status !== 200) {
-          return this.$message.error('登录失败!')
-        } else {
-          // 登录成功后的操作
-          this.$message.success('登录成功!')
-          window.sessionStorage.setItem('token', res.data.token)
-          this.$router.push('/')
+        if (!this.isMobileNumber(this.customerLoginForm.phone)) {
+          return this.$message.error("手机号格式错误!")
         }
+        await this.$http.get('customer/login', {
+          params: {
+            phone: this.customerLoginForm.phone,
+            password: this.customerLoginForm.password
+          }
+        }).then(response => {
+           // 登录成功后的操作
+          console.log(response)
+          this.$message.success('登录成功!')
+          window.sessionStorage.setItem('token', response.data.token)
+          this.$router.push('/')
+        }).catch(err => {
+          return this.$message.error('登录失败!')
+        })
       })
     },
-    handleSelect () {
-
+    isMobileNumber (phone) {
+      var flag = false
+      var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/
+      if (myreg.test(phone)) {
+        flag = true
+      }
+      return flag
     }
   }
 }

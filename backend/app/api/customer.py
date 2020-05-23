@@ -77,9 +77,8 @@ customer_reg_parser.add_argument('phone', required=True)
 customer_reg_parser.add_argument('password', required=True)
 customer_reg_parser.add_argument('nickname', required=True)
 customer_reg_parser.add_argument('gender', type=int, required=True)
-customer_reg_parser.add_argument('payment_info', required=True)
-customer_reg_parser.add_argument('captcha_identifer', required=True)
-customer_reg_parser.add_argument('captcha_code', required=True)
+# customer_reg_parser.add_argument('captcha_identifer', required=True)
+# customer_reg_parser.add_argument('captcha_code', required=True)
 customer_reg_parser.add_argument('image')
 
 
@@ -105,8 +104,8 @@ class CustomerRegister(Resource):
         args = customer_reg_parser.parse_args()
 
         # 检查验证码
-        if not check_captcha(args.captcha_identifer, args.captcha_code):
-            return {'message': 'Wrong captcha code!'}, 400
+        # if not check_captcha(args.captcha_identifer, args.captcha_code):
+        #     return {'message': 'Wrong captcha code!'}, 400
 
         if args.gender == Gender.male.value:
             gender = Gender.male
@@ -119,8 +118,7 @@ class CustomerRegister(Resource):
         new_user = Customer(phone=args.phone,
                             password_hash=password_hash,
                             gender=gender,
-                            name=args.nickname,
-                            payment_info=args.payment_info)
+                            name=args.nickname)
 
         # 储存用户头像
         if args.image:

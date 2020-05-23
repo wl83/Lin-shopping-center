@@ -1,23 +1,7 @@
 <template>
   <div class="register-container">
     <header>
-      <div class="nav-bar">
-        <div class="login-logo">
-          <a href=""><span>Lin-Shopping</span></a>
-        </div>
-        <div class="search-query">
-          <el-input placeholder="请输入内容" class="search-query-input" v-model="searchQuery.text" clearable prefix-icon="el-icon-search"></el-input>
-        </div>
-        <div class="nav-menu">
-          <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
-             <!-- :default-active="activeIndex" -->
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">购物</el-menu-item>
-            <el-menu-item index="3">购物车</el-menu-item>
-            <el-menu-item index="4">个人中心</el-menu-item>
-          </el-menu>
-        </div>
-      </div>
+      <navbar></navbar>
     </header>
 
     <div class="register-grid">
@@ -31,13 +15,16 @@
             <el-input v-model="customerRegisterForm.phone" placeholder="请输入手机号" prefix-icon="el-icon-phone-outline"></el-input>
           </el-form-item>
           <el-form-item class="form-item" label="密码" prop="password">
-            <el-input v-model="customerRegisterForm.password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
+            <el-input v-model="customerRegisterForm.password" placeholder="请输入密码" type="password" prefix-icon="el-icon-lock"></el-input>
           </el-form-item>
           <el-form-item class="form-item" label="确认密码" prop="passwordAgain">
-            <el-input v-model="customerRegisterForm.passwordAgain" placeholder="请再次输入密码" prefix-icon="el-icon-lock"></el-input>
+            <el-input v-model="customerRegisterForm.passwordAgain" placeholder="请再次输入密码" type="password" prefix-icon="el-icon-lock"></el-input>
+          </el-form-item>
+          <el-form-item class="form-item" label="名称" prop="name">
+            <el-input v-model="customerRegisterForm.name" placeholder="请输入名称" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
           <el-form-item class="form-item" label="性别" prop="gender">
-            <el-select v-model="genderValue" placeholder="请选择性别">
+            <el-select v-model="customerRegisterForm.genderValue" placeholder="请选择性别">
               <el-option
                 v-for="item in genderOptions"
                 :key="item.value"
@@ -47,18 +34,26 @@
             </el-select>
           </el-form-item>
           <el-form-item class="form-item" label="头像">
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="true"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            <div>
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                v-loading="progressDisplay"
+                :show-file-list="false"
+                :limit="1"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :on-progress="beforeAvatarprogress">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </div>
+            <div>
+              <el-progress v-if="progressDisplay" class="progress-bar" :percentage="loadProgress"></el-progress>
+            </div>
           </el-form-item>
           <el-form-item class="form-item">
-            <el-button type="primary" class="register-btn">注册</el-button>
+            <el-button type="primary" class="register-btn" @click="customerRegister">注册</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -67,6 +62,7 @@
 </template>
 
 <script>
+import navbar from './navBar.vue'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -90,13 +86,12 @@ export default {
     }
     return {
       labelPosition: 'right',
-      searchQuery: {
-        text: ''
-      },
       customerRegisterForm: {
         phone: '',
         password: '',
-        passwordAgain: ''
+        passwordAgain: '',
+        name: '',
+        genderValue: 1
       },
       customerRegisterFormRules: {
         phone: [
@@ -111,40 +106,116 @@ export default {
           { required: true, message: '请再次输入密码', trigger: 'blur' },
           { validator: validatePass2, trigger: 'blur' }
         ],
-        gender: [
-          { required: true, message: '请选择性别', trigger: 'blur' }
+        // gender: [
+        //   { required: true, message: '请选择性别', trigger: 'blur', type: 'number' }
+        // ],
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
         ]
       },
       genderOptions: [{
-        value: 0,
+        value: 1,
         label: '男'
       }, {
-        value: 1,
+        value: 2,
         label: '女'
       }],
-      genderValue: '',
-      imageUrl: ''
+      imageUrl: '',
+      loadProgress: 0,
+      progressDisplay: false
     }
   },
+  components: {
+    navbar
+  },
   methods: {
+    purify_images () {
+      return this.imageUrl.replace(/data:image\/[^;]+;base64,/i, '')
+    },
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
+      // if (this.image === '') {
+      //   console.log(this.imageUrl)
+      // } else {
+      //   console.log(this.imageUrl)
+      // }
     },
     beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isPng = file.type === 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG && !isPng) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      const pict = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/pdf', 'image/JPG', 'image/JPEG', 'image/PBG', 'image/GIF', 'image/BMP', 'image/PDF']
+      var isPict = false
+      for (var i = 0; i < pict.length; i++) {
+        if (file.type === pict[i]) {
+          isPict = true
+          break
+        }
       }
-      if (!isLt2M) {
+      const isLt10M = file.size / 1024 / 1024 < 10
+
+      if (!isPict) {
+        this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!')
+      }
+      if (!isLt10M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isPng && isLt2M
-    },
-    handleSelect () {
 
+      return isPict && isLt10M
+    },
+    beforeAvatarprogress (event, file, fileList) {
+      this.loadProgress = Math.floor(event.percent)
+      // console.log(this.loadProgress, this.progressDisplay)
+      if (this.loadProgress > 0 && this.loadProgress < 100) {
+        this.progressDisplay = true
+      } else if (this.loadProgress === 100) {
+        this.progressDisplay = false
+      }
+    },
+    customerRegister () {
+      // if (!this.customerRegisterForm.genderValue) {
+      //   console.log('...')
+      // } else {
+      //   console.log(this.customerRegisterForm.genderValue)
+      // }
+      this.$refs.customerRegisterFormRef.validate(async valid => {
+        if (!valid) {
+          return
+        }
+        if (!this.isMobileNumber(this.customerRegisterForm.phone)) {
+          return this.$message.error('手机号格式错误!')
+        }
+        // if (!this.customerRegisterForm.genderValue) {
+        //   console.log('null')
+        // } else {
+        //   console.log(this.customerRegisterForm.genderValue)
+        // }
+        await this.$http.post('customer/register', {
+          phone: this.customerRegisterForm.phone,
+          password: this.customerRegisterForm.password,
+          nickname: this.customerRegisterForm.name,
+          gender: this.customerRegisterForm.genderValue,
+          image: this.purify_images()
+        }).then(() => {
+          this.$message.success('注册成功！')
+          this.$router.push('customer/login')
+        }).catch(err => {
+          console.log(err)
+          if (typeof err.response.data.message === 'string') {
+            if (err.response.data.message.startsWith('Phone')) {
+              this.$message.error('手机号已注册！')
+              this.$router.push('customer/login')
+            }
+          } else {
+            this.$message.error('注册失败，请重试！')
+          }
+        })
+      })
+    },
+    isMobileNumber (phone) {
+      var flag = false
+      var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/
+      if (myreg.test(phone)) {
+        flag = true
+      }
+      return flag
     }
   }
 }
@@ -153,7 +224,7 @@ export default {
 <style lang="less" scoped>
   .register-grid{
     width: 50%;
-    height: 650px;
+    height: 700px;
     position: absolute;
     left: 50%;
     top: 20%;
@@ -163,6 +234,7 @@ export default {
     padding-right: 50px;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-bottom: 100px;
   }
   .form-item{
     margin-bottom: 40px;
@@ -197,5 +269,8 @@ export default {
     position: absolute;
     left: 50%;
     transform: translate(-70%);
+  }
+  .progress-bar{
+    width: 155px;
   }
 </style>

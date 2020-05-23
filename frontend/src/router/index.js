@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/home/home.vue'
 import UserLogin from '../components/UserLogin.vue'
+import ShopLogin from '../components/ShopLogin.vue'
 import UserRegister from '../components/UserRegister.vue'
 import Item from '../views/item/item.vue'
 import Customer from '../views/customer/customer.vue'
@@ -24,6 +25,10 @@ const routes = [
   {
     path: '/customer/login',
     component: UserLogin
+  },
+  {
+    path: '/shop/login',
+    component: ShopLogin
   },
   {
     path: '/customer/register',
@@ -72,7 +77,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  var nextPath = ['/customer/login', '/customer/register', '/home', '/', '/item']
+  var nextPath = ['/customer/login', '/customer/register', '/home', '/', '/item', '/shop/login', '/shop/register']
   for (var i = 0; i < nextPath.length; i++) {
     if (to.path === nextPath[i]) {
       return next()

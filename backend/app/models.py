@@ -40,7 +40,6 @@ class Customer(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(30), nullable=False)
     gender = db.Column(db.Enum(Gender), nullable=False)
-    payment_info = db.Column(db.String(100))
     created_time = db.Column(db.Date, default=datetime.utcnow)
     image = db.Column(db.LargeBinary)
 
