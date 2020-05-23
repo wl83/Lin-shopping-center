@@ -4,7 +4,7 @@
       <el-image
         :src="url"
         class="item-image"
-        :fit="cover"></el-image>
+        :fit="fit"></el-image>
     </div>
     <div class="item-price">
       <el-link type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
@@ -21,7 +21,8 @@
 export default {
   data () {
     return {
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      fit: 'cover'
     }
   }
 }

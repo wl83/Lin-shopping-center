@@ -10,12 +10,12 @@ header{
     margin-left: 100px;
   }
   .search-query{
-    width: 300px;
+    width: 600px;
     float: left;
     padding-top: 10px;
   }
   .nav-menu{
-    width: 400px;
+    width: 300px;
     float: right;
   }
   .login-logo a{
@@ -29,5 +29,5 @@ header{
   }
   .search-query-input{
     width: 300px;
-    margin-left: 200px;
+    margin-left: 250px;
   }

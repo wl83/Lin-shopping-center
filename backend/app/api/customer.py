@@ -162,7 +162,7 @@ class CustomerManagement(Resource):
         data['nickname'] = auth_customer.name
         data['phone'] = auth_customer.phone
         data['gender'] = auth_customer.gender.value
-        data['payment_info'] = auth_customer.payment_info
+        # data['payment_info'] = auth_customer.payment_info
         data['created_time'] = str(auth_customer.created_time)
         if auth_customer.image:
             data['image'] = b64encode(auth_customer.image).decode('utf-8')
@@ -222,7 +222,7 @@ class CustoemrTest(Resource):
             data['phone'] = customer.phone
             data['password_hash'] = customer.password_hash
             data['gender'] = str(customer.gender)
-            data['payment_info'] = customer.payment_info
+            # data['payment_info'] = customer.payment_info
             data['created_time'] = str(customer.created_time)
             output.append(data.copy())
         return {'customers': output}, 200
