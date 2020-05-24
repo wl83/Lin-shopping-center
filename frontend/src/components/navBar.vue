@@ -1,4 +1,5 @@
 <template>
+  <header>
   <div class="nav-bar">
     <div class="login-logo">
       <a href="/#/"><span>Lin-Shopping</span></a>
@@ -16,15 +17,24 @@
       </el-menu>
     </div>
   </div>
+  </header>
 </template>
 
 <script>
 export default {
+  props: {
+    transmitData: {
+      searchFn: Function,
+      rankTypeN: Number,
+      groupIndexN: Number
+    }
+  },
   data () {
     return {
       searchQuery: {
         text: ''
-      }
+      },
+      items: []
     }
   },
   methods: {
@@ -44,7 +54,13 @@ export default {
       }
     },
     handleSearch () {
-      this.$router.push({ path: 'search', query: { itemName: this.searchQuery.text } })
+      if (this.$route.path === '/search') {
+        this.$parent.search(this.searchQuery.text, this.rankTypeN, this.groupIndexN)
+        this.$emit('childFn', this.items)
+      } else {
+        this.$router.replace({ path: '/search', query: { itemName: this.searchQuery.text } })
+      }
+      // this.$router.go(0)
     }
   }
 }

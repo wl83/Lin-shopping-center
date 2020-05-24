@@ -1,29 +1,19 @@
 <template>
   <div class="search-container">
-    <header>
-      <navbar></navbar>
-    </header>
+    <navbar :routerData="transmitData" @childFn="parentFn"></navbar>
 
     <div class="home-grid">
       <div class="left-arrow">
-        <el-button class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
+        <el-button @click="onPrevChangeClicked" class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
       </div>
       <div class="scroll-pict">
         <itemgrid :items="items"></itemgrid>
       </div>
       <div class="page-container">
-        <el-pagination
-          class="page"
-          background
-          layout="prev, pager, next"
-          @prev-click="onPrevChangeClicked"
-          @next-click="onNextChangeClicked"
-          :page-size="3"
-          :total="100">
-        </el-pagination>
+        <p class="currentPage">{{ this.groupIndex+1 }}</p>
       </div>
       <div class="right-arrow">
-        <el-button class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
+        <el-button @click="onNextChangeClicked" class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
       </div>
     </div>
   </div>
@@ -41,27 +31,39 @@ export default {
     return {
       itemName: '',
       items: [],
-      groupIndex: 1,
-      rankType: 5
+      groupIndex: 0,
+      rankType: 5,
+      transmitData: {
+        searchFn: this.search,
+        rankTypeN: this.rankType,
+        groupIndexN: this.groupIndex
+      }
     }
   },
   methods: {
+    parentFn (childData) {
+      this.items = childData
+    },
     onPrevChangeClicked () {
+      if (this.groupIndex === 0) {
+        return this.$message.warning('不能往前了～')
+      }
+      this.groupIndex -= 1
       this.search(
         this.itemName,
         this.rankType,
-        this.groupIndex - 1
+        this.groupIndex
       )
     },
     onNextChangeClicked () {
+      this.groupIndex += 1
       this.search(
         this.itemName,
         this.rankType,
-        this.groupIndex + 1
+        this.groupIndex
       )
     },
     search (searchItem, rankType, groupIndex) {
-      // console.log('!!!')
       this.items = []
       this.$http.get('item/search', {
         params: {
@@ -100,11 +102,6 @@ export default {
   },
   mounted: function () {
     this.itemName = this.$route.query.itemName
-    // if (this.$route.query.itemName === '') {
-    //   console.log('!!!!!!')
-    // // }
-    // console.log(this.$route.query.itemName)
-    // search
     this.onSearch()
   }
 }
@@ -153,17 +150,20 @@ export default {
   transform: translate(-50%);
 }
 .page-container{
-  top: 100%;
-  right: 35%;
-  position: relative;
-  margin-bottom: 50px;
-}
-/* .page{
-  width: 1200px;
-  height: 10%;
-  position: relative;
+  width: 50px;
+  height: 50px;
+  top: 90%;
   left: 50%;
-  top: 100%;
-  transform: translate(-20%);
-} */
+  transform: translate(-50%);
+  position: relative;
+  background-color: #76b1f9;
+}
+.currentPage{
+  left: 40%;
+  top: 50%;
+  transform: translate(0, -50%);
+  position: relative;
+  color: #fff;
+  font-size: 20px;
+}
 </style>

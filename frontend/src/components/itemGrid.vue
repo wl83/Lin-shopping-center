@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     onItemClicked (item) {
-      this.$router.push({ name: 'item', params: { item_id: item.item_id } })
+      this.$router.push('item/' + item.item_id)
     }
   }
 }

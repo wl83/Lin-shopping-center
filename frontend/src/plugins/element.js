@@ -20,8 +20,8 @@ Vue.use(Drawer)
 Vue.use(Rate)
 Vue.use(Progress)
 Vue.use(Loading)
-Vue.use(MessageBox)
 Vue.use(Pagination)
+Vue.component(MessageBox.name, MessageBox)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

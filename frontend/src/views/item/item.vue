@@ -6,15 +6,14 @@
 
     <div class="item-info">
       <div class="item-image">
-        <el-carousel indicator-position="outside" class="item-image-carousel">
-          <el-carousel-item v-for="item in 4" :key="item" class="item-image-carousel-item">
-            <h3>{{ item }}</h3>
-          </el-carousel-item>
-        </el-carousel>
+        <el-image
+          :src="'data:image;base64,' + item.images[0]"
+          class="item-image"
+          :fit="fit"></el-image>
       </div>
       <div class="item-info-more">
         <div class="item-name">
-          <h1><span>华为P40 pro</span></h1>
+          <h1><span>{{ item.name }}</span></h1>
         </div>
         <div class="item-intro">
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aliquam vel ipsum. Cupiditate, perferendis. Quod esse, est non nisi necessitatibus similique ipsam pariatur sunt eos fuga vel molestiae, tempora dolore.</p>
@@ -96,7 +95,8 @@ export default {
   data () {
     return {
       num: 1,
-      url: ''
+      url: '',
+      fit: 'contain'
     }
   }
 }
