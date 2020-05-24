@@ -1,85 +1,61 @@
 <template>
-  <div class="item-container">
-    <header>
-      <navbar></navbar>
-    </header>
+  <div class="item-page-container">
+    <navbar></navbar>
 
-    <div class="item-info">
-      <div class="item-image">
-        <el-image
-          :src="'data:image;base64,' + item.images[0]"
-          class="item-image"
-          :fit="fit"></el-image>
-      </div>
-      <div class="item-info-more">
-        <div class="item-name">
-          <h1><span>{{ item.name }}</span></h1>
+    <div class="item-page-wrapper">
+      <div class="item-page-info-container">
+        <div class="item-page-image-container">
+            <el-image
+              :src="'data:image;base64,' + this.images[0]"
+              class="item-page-image"
+              :fit="fit"></el-image>
         </div>
-        <div class="item-intro">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aliquam vel ipsum. Cupiditate, perferendis. Quod esse, est non nisi necessitatibus similique ipsam pariatur sunt eos fuga vel molestiae, tempora dolore.</p>
-        </div>
-        <div style="height: 20px;"></div>
-        <div class="item-stock" style="height: 30px;">
-          <p>库存：</p>
-        </div>
-        <div class="item-sales" style="height: 30px;">
-          <p>销量：</p>
-        </div>
-        <div class="item-stars" style="height: 30px;">
-          <p>评价等级：</p>
-        </div>
-        <div style="height: 20px;"></div>
-        <div style="height: 30px;"></div>
-        <div class="item-price-buy">
-          <div class="item-price">
-            <p><span>¥100</span></p>
+        <div class="item-page-intro-container">
+          <div class="item-page-name-container">
+            <p class="item-page-name"><span>{{ this.name }}</span></p>
           </div>
-          <div class="item-shop">
-            <el-link type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
+          <div class="item-page-brief-container">
+            <p class="item-page-brief"><span>{{ this.info }}</span></p>
           </div>
-          <div class="item-amount">
-            <el-input-number size="small" class="item-input-number" v-model="num" @change="handleChange" :min="1" :max="10"></el-input-number>
+          <div class="item-page-stock-container">
+            <p class="item-page-stock"><span>库存: {{ this.inStock }}</span></p>
           </div>
-          <div class="item-in-cart">
-            <el-button type="primary" class="in-cart-btn">加入购物车</el-button>
+          <div class="item-page-sales-container">
+            <p class="item-page-sales"><span>销量: {{ this.sales }}</span></p>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="item-remark-title">
-      <h1><span>商品评价</span></h1>
-    </div>
-
-    <div class="item-remark-container">
-      <div class="item-remark">
-        <div class="item-avatar-container">
-          <el-image
-          style="width: 150px; height: 150px"
-          :src="url"
-          :fit="fit"
-          class="item-avatar"
-          ></el-image>
-          <div style="width: 100%;text-align: center;">
-            <span>小明</span>
+          <div class="item-page-star-container">
+            <div class="item-page-star-title-container">
+              <p class="item-page-star"><span>评价等级:</span></p>
+            </div>
+            <div class="item-page-rate-container">
+              <el-rate
+                class="item-page-rate"
+                v-model="value"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value}">
+              </el-rate>
+            </div>
           </div>
-        </div>
-        <div class="item-remark-info">
-          <div class="item-remark-star">
-            <p>评价等级：</p>
-          </div>
-          <div class="item-review">
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae soluta reiciendis modi quaerat vel dolores eligendi quod atque sequi vitae animi optio voluptatum, quo necessitatibus molestiae. Adipisci quisquam quae temporibus.</p>
-          </div>
-          <div class="item-time">
-            <p>2020-05-01</p>
+          <div class="item-page-price-buy-container">
+            <div class="item-page-price-container">
+              <p class="item-page-current-price"><span>¥{{ this.currentPrice }}</span></p>
+              <p class="item-page-original-price"><span>¥{{ this.originalPrice }}</span></p>
+            </div>
+            <div class="item-page-buy-container">
+              <div class="item-page-input-number-container">
+                <el-input-number class="item-page-input-number" size="small" v-model="num" @change="handleChange" :min="1" label="描述文字"></el-input-number>
+              </div>
+              <div class="item-page-in-cart-container">
+                <el-button class="item-page-in-cart-btn" type="primary">加入购物车</el-button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="item-remark">
 
-      </div>
-      <div class="item-remark">
+      <div class="item-page-review-container">
 
       </div>
     </div>
@@ -95,132 +71,184 @@ export default {
   data () {
     return {
       num: 1,
+      value: 3.7,
       url: '',
-      fit: 'contain'
+      fit: 'contain',
+      itemId: '',
+      name: '',
+      shopId: '',
+      currentPrice: '',
+      originalPrice: '',
+      inStock: '',
+      info: '',
+      sales: '',
+      itemClass: '',
+      star: '',
+      images: []
     }
+  },
+  methods: {
+
+  },
+  mounted: function () {
+    console.log(this.$route.params.itemId)
+    this.itemId = this.$route.params.itemId
+    this.$http.get('items/' + this.$route.params.itemId, {})
+      .then(response => {
+        this.name = response.data.name
+        this.currentPrice = response.data.current_price
+        this.originalPrice = response.data.original_price
+        this.inStock = response.data.in_stock
+        this.info = response.data.info
+        this.sales = response.data.sales
+        this.shopId = response.data.shop_id
+        this.itemClass = response.data.item_class
+        this.images = response.data.images
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 }
 </script>
 
 <style lang="less" scoped>
-.item-info{
+.item-page-wrapper{
   width: 100%;
-  height: 500px;
+  height: 700px;
   border: 1px solid;
-}
-.item-info .item-image{
-  width: 30%;
-  height: 450px;
-  border: 1px solid;
-  top: 5%;
-  left: 3%;
-  position: relative;
-  float: left;
-}
-.item-info-more{
-  width: 60%;
-  height: 450px;
-  border: 1px solid;
-  top: 5%;
-  right: -6%;
-  position: relative;
-  float: left;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.item-remark-title{
-  width: 100%;
-  height: 100px;
-  border: 1px solid;
-  margin-top: 10px;
-}
-.item-remark-title h1{
-  text-align: center;
-}
-.item-remark-container{
-
-}
-.item-image{
-  height: 400px;
-  width: 100%;
-}
-.item-image-carousel{
-  height: 400px;
-  width: 100%;
-}
-.item-image-carousel-item{
-  height: 400px;
-  width: 100%;
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 18px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
-}
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
-}
-.item-price-buy{
-  width: 100%;
-  height: 100px;
-}
-.item-price-buy .item-price{
-  width: 200px;
-  float: left;
-  top: 65%;
-  position: absolute;
-}
-.item-price-buy .item-price p{
-  font-size: 50px;
-}
-.item-shop{
-  float: left;
-  width: 15%;
-  position: relative;
-  left: 15%;
-  top: 20%;
-}
-.item-amount{
-  float: left;
-  position: relative;
-  left: 45%;
-  top: 10%;
-}
-.item-in-cart{
-  float: left;
-  position: relative;
-  left: 50%;
-  top: 5%;
-}
-.item-remark{
-  width: 95%;
-  height: 200px;
-  border: 1px solid;
-  margin-top: 10px;
-  position: relative;
-  left: 2.5%;
   padding: 10px 10px 10px 10px;
 }
-.item-avatar-container{
-  width: 20%;
-  height: 200px;
+.item-page-info-container{
+  width: 50%;
+  height: 700px;
   border: 1px solid;
-  float: left;
-  margin-right: 10px;
-}
-.item-remark-info{
-  width: 78%;
-  height: 200px;
-  border: 1px solid;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   float: left;
 }
-.item-avatar{
+.item-page-image-container{
+  width: 25%;
+  height: 25%;
+  border: 1px solid;
   left: 50%;
   transform: translate(-50%);
+  position: relative;
+}
+.item-page-image{
+  width: 100%;
+  height: 100%;
+}
+.item-page-intro-container{
+  width: 100%;
+  height: 70%;
+  border: 1px solid;
+  margin-top: 10px;
+}
+.item-page-name-container{
+  width: 100%;
+  height: 15%;
+  border: 1px solid;
+}
+.item-page-brief-container{
+  width: 100%;
+  height: 30%;
+  border: 1px solid;
+}
+.item-page-stock-container{
+  width: 100%;
+  height: 10%;
+  border: 1px solid;
+}
+.item-page-sales-container{
+  width: 100%;
+  height: 10%;
+  border: 1px solid;
+}
+.item-page-star-container{
+  width: 100%;
+  height: 10%;
+  border: 1px solid;
+}
+.item-page-price-buy-container{
+  width: 100%;
+  height: 20%;
+  border: 1px solid;
+}
+.item-page-price-container{
+  width: 50%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-buy-container{
+  width: 49%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-input-number-container{
+  width: 49%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-in-cart-container{
+  width: 49%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-input-number{
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+.item-page-in-cart-btn{
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+.item-page-name span{
+  font-size: 30px;
+}
+.item-page-brief{
+  color: rgb(122, 122, 122);
+}
+.item-page-star-title-container{
+  width: 10%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-rate-container{
+  width: 89%;
+  height: 100%;
+  border: 1px solid;
+  float: left;
+}
+.item-page-rate{
+  top: 50%;
+  transform: translate(0,-50%);
+  position: relative;
+}
+.item-page-current-price span{
+  font-size: 30px;
+}
+.item-page-original-price span{
+  color: rgb(212, 0, 0);
+  text-decoration: line-through;
+}
+.item-page-review-container{
+  width: 45%;
+  height: 700px;
+  border: 1px solid;
+  float: left;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

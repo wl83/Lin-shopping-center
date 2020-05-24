@@ -20,59 +20,72 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
     path: '/customer/login',
+    name: 'customerLogin',
     component: UserLogin
   },
   {
     path: '/shop/login',
+    name: 'shopLogin',
     component: ShopLogin
   },
   {
     path: '/customer/register',
+    name: 'customerRegister',
     component: UserRegister
   },
   {
-    path: '/item/:item_id',
+    path: '/item',
+    name: 'item',
     component: Item
   },
   {
     path: '/customer',
+    name: 'customer',
     component: Customer
   },
   {
-    path: '/shop/:shop_id',
+    path: '/shop',
+    name: 'shop',
     component: Shop
   },
   {
     path: '/customer/address',
+    name: 'customerAddress',
     component: Address
   },
   {
     path: '/customer/address/add',
+    name: 'customerAddressAdd',
     component: AddAddress
   },
   {
     path: '/customer/cart',
+    name: 'customerCart',
     component: Cart
   },
   {
     path: '/customer/cart/submit',
+    name: 'customerCartSubmit',
     component: CartSubmit
   },
   {
     path: '/customer/orders',
+    name: 'customerOrders',
     component: CustomerOrder
   },
   {
     path: '/customer/reviews',
+    name: 'customerReviews',
     component: CustomerReview
   },
   {
     path: '/search',
+    name: 'search',
     component: Search
   }
 ]

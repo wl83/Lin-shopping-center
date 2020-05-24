@@ -4,7 +4,7 @@
     class="grid"
     v-for="(item, index) in items.filter(it => it.name != null)"
     :key="index"
-    @click="onItemClicked"
+    @click="onItemClicked(item)"
     >
       <div class="item-image-grid">
         <el-image
@@ -37,7 +37,8 @@ export default {
   },
   methods: {
     onItemClicked (item) {
-      this.$router.push('item/' + item.item_id)
+      console.log(item.item_id)
+      this.$router.push({ name: 'item', params: { itemId: item.item_id } })
     }
   }
 }
