@@ -8,7 +8,8 @@
             <el-image
               :src="'data:image;base64,' + this.images[0]"
               class="item-page-image"
-              :fit="fit"></el-image>
+              :fit="fit">
+            </el-image>
         </div>
         <div class="item-page-intro-container">
           <div class="item-page-name-container">
@@ -38,6 +39,7 @@
               </el-rate>
             </div>
           </div>
+          <!-- <div style="height: 20px;"></div> -->
           <div class="item-page-price-buy-container">
             <div class="item-page-price-container">
               <p class="item-page-current-price"><span>¥{{ this.currentPrice }}</span></p>
@@ -56,7 +58,10 @@
       </div>
 
       <div class="item-page-review-container">
-
+        <!-- <div class="item-page-review-up-container">
+          <el-button></el-button>
+        </div> -->
+        <remarkgrid :reviews="reviews" @childFn="parentFn"></remarkgrid>
       </div>
     </div>
   </div>
@@ -64,14 +69,16 @@
 
 <script>
 import navbar from '../../components/navBar.vue'
+import remarkgrid from '../../components/remarkGrid.vue'
 export default {
   components: {
-    navbar
+    navbar,
+    remarkgrid
   },
   data () {
     return {
       num: 1,
-      value: 3.7,
+      value: 0,
       url: '',
       fit: 'contain',
       itemId: '',
@@ -84,14 +91,20 @@ export default {
       sales: '',
       itemClass: '',
       star: '',
-      images: []
+      images: [],
+      reviews: [],
+      logined: false
     }
   },
   methods: {
+    parentFn (childData) {
+      this.value = childData
+    },
+    handleChange () {
 
+    }
   },
   mounted: function () {
-    console.log(this.$route.params.itemId)
     this.itemId = this.$route.params.itemId
     this.$http.get('items/' + this.$route.params.itemId, {})
       .then(response => {
@@ -104,10 +117,39 @@ export default {
         this.shopId = response.data.shop_id
         this.itemClass = response.data.item_class
         this.images = response.data.images
+        this.value = response.data.star_value.toFixed(1) > 5 ? 5 : response.data.star_value.toFixed(1)
       })
       .catch(err => {
         console.error(err)
       })
+    this.$http.get('review/search', { params: { item_id: this.$route.params.itemId } })
+      .then(response => {
+        const reviewIds = response.data.review_ids
+
+        reviewIds.forEach(reviewId => {
+          this.$http.get('review/' + reviewId, {})
+            .then(response => {
+              const review = {}
+              review.reviewId = response.data.review_id
+              review.star = response.data.star > 5 ? 5 : response.data.star
+              review.remark = response.data.remark
+              review.createdTime = response.data.created_time
+              review.customerId = response.data.customer_id
+              this.reviews.push(review)
+            })
+            .catch(err => err)
+        })
+      })
+      .catch(err => err)
+    if (window.sessionStorage.getItem('token')) {
+      this.$http.get('customer', {
+        headers: {
+          authorization: window.sessionStorage.getItem('token')
+        }
+      }).then(() => {
+        this.logined = true
+      }).catch(() => {})
+    }
   }
 }
 </script>
@@ -116,13 +158,12 @@ export default {
 .item-page-wrapper{
   width: 100%;
   height: 700px;
-  border: 1px solid;
   padding: 10px 10px 10px 10px;
 }
 .item-page-info-container{
   width: 50%;
   height: 700px;
-  border: 1px solid;
+  border: 1px solid rgb(189, 189, 189);
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -131,7 +172,6 @@ export default {
 .item-page-image-container{
   width: 25%;
   height: 25%;
-  border: 1px solid;
   left: 50%;
   transform: translate(-50%);
   position: relative;
@@ -142,62 +182,55 @@ export default {
 }
 .item-page-intro-container{
   width: 100%;
-  height: 70%;
-  border: 1px solid;
+  height: 72%;
+  border: 1px solid rgb(170, 170, 170);
   margin-top: 10px;
 }
 .item-page-name-container{
   width: 100%;
   height: 15%;
-  border: 1px solid;
 }
 .item-page-brief-container{
   width: 100%;
   height: 30%;
-  border: 1px solid;
+  overflow: hidden;
+  border-top: 1px solid rgb(189, 189, 189);
+  border-bottom: 1px solid rgb(189, 189, 189);
 }
 .item-page-stock-container{
   width: 100%;
   height: 10%;
-  border: 1px solid;
 }
 .item-page-sales-container{
   width: 100%;
   height: 10%;
-  border: 1px solid;
 }
 .item-page-star-container{
   width: 100%;
   height: 10%;
-  border: 1px solid;
 }
 .item-page-price-buy-container{
   width: 100%;
-  height: 20%;
-  border: 1px solid;
+  height: 15%;
 }
 .item-page-price-container{
   width: 50%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-buy-container{
   width: 49%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-input-number-container{
   width: 49%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-in-cart-container{
   width: 49%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-input-number{
@@ -221,13 +254,11 @@ export default {
 .item-page-star-title-container{
   width: 10%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-rate-container{
   width: 89%;
   height: 100%;
-  border: 1px solid;
   float: left;
 }
 .item-page-rate{
@@ -235,8 +266,16 @@ export default {
   transform: translate(0,-50%);
   position: relative;
 }
+.item-page-current-price{
+  margin-top: 10px;
+  margin-bottom: 0;
+}
 .item-page-current-price span{
   font-size: 30px;
+}
+.item-page-original-price{
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .item-page-original-price span{
   color: rgb(212, 0, 0);
@@ -245,7 +284,7 @@ export default {
 .item-page-review-container{
   width: 45%;
   height: 700px;
-  border: 1px solid;
+  border: 1px solid rgb(167, 167, 167);
   float: left;
   padding-top: 10px;
   padding-left: 10px;

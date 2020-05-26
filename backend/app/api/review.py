@@ -6,7 +6,7 @@ from flask import request
 from flask_restplus import Resource, reqparse
 
 # the number of each group of reviews
-GROUP_COUNT = 5
+GROUP_COUNT = 3
 
 review_post_parser = reqparse.RequestParser()
 review_post_parser.add_argument('item_id', type=int, required=True)

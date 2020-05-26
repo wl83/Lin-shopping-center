@@ -1,7 +1,7 @@
 from . import api
 from .resource import SecureShopResource
 from .. import db
-from ..models import Item, ItemImage
+from ..models import Item, ItemImage, Review
 from flask_restplus import Resource, reqparse
 from base64 import b64decode, b64encode
 
@@ -98,6 +98,14 @@ class ItemQuery(Resource):
             img_data = b64encode(imgRecord.image)
             images.append(img_data.decode('utf-8'))
         item_data['images'] = images
+
+        reviews = Review.query.filter_by(item_id=item_id).all()
+
+        starValue = 0
+        for review in reviews:
+            starValue += review.star
+        starValue /= len(reviews)
+        item_data['star_value'] = starValue
 
         return item_data, 200
 

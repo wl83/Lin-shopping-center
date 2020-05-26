@@ -28,7 +28,7 @@
         </div>
         <div class="customer-manage-container">
           <div class="customer-manage-grid">
-            <el-button icon="el-icon-shopping-cart-2" type="danger" plain class="btn">购物车</el-button>
+            <el-button @click="onCartClicked" icon="el-icon-shopping-cart-2" type="danger" plain class="btn">购物车</el-button>
           </div>
           <div class="customer-manage-grid">
             <el-button icon="el-icon-notebook-1" type="success" plain class="btn">全部订单</el-button>
@@ -84,6 +84,9 @@ export default {
           message: '已取消退出'
         })
       })
+    },
+    onCartClicked () {
+      this.$router.push({ name: 'customerCart' })
     }
   },
   mounted: function () {
@@ -135,27 +138,27 @@ export default {
 }
 .customer-intro-container{
   width: 90%;
-  height: 350px;
+  height: 330px;
   border: 1px solid rgb(195, 195, 195);
-  top: 5%;
+  top: 10%;
   left: 5%;
   position: relative;
 }
 .customer-intro{
   width: 50%;
-  height: 350px;
+  height: 100%;
   border-right: 1px solid rgb(189, 189, 189);
   float: left;
 }
 .customer-manage-container{
   width: 49%;
-  height: 350px;
+  height: 100%;
   float: left;
 }
 .customer-manage-grid{
   width: 48%;
   height: 50px;
-  margin-top: 10px;
+  margin-top: 12px;
   left: 55%;
   transform: translate(-50%);
   position: relative;

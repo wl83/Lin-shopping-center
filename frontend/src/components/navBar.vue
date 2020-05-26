@@ -41,14 +41,15 @@ export default {
     handleSelect (index) {
       switch (index) {
         case '1': {
-          this.$router.push('/')
+          this.$router.replace('/')
           break
         }
         case '2': {
+          this.$router.replace('/customer/cart')
           break
         }
         case '3': {
-          this.$router.push('customer')
+          this.$router.replace('/customer')
           break
         }
       }
