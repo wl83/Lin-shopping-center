@@ -31,7 +31,7 @@
             <el-button @click="onCartClicked" icon="el-icon-shopping-cart-2" type="danger" plain class="btn">购物车</el-button>
           </div>
           <div class="customer-manage-grid">
-            <el-button icon="el-icon-notebook-1" type="success" plain class="btn">全部订单</el-button>
+            <el-button @click="onOrderClicked" icon="el-icon-notebook-1" type="success" plain class="btn">全部订单</el-button>
           </div>
           <div class="customer-manage-grid">
             <el-button icon="el-icon-edit-outline" type="warning" plain class="btn">历史评价</el-button>
@@ -87,6 +87,9 @@ export default {
     },
     onCartClicked () {
       this.$router.push({ name: 'customerCart' })
+    },
+    onOrderClicked () {
+      this.$router.push({ name: 'customerOrders' })
     }
   },
   mounted: function () {
