@@ -9,14 +9,14 @@
         <div class="address-info">
           <div class="address-name-phone-container">
             <div class="address-name-container">
-
+              <span>{{ this.chosenAddr.name }}</span>
             </div>
             <div class="address-phone-container">
-
+              <span>{{ this.chosenAddr.tel }}</span>
             </div>
           </div>
           <div class="address-info-container">
-
+            <span>{{ this.chosenAddr.address }}</span>
           </div>
         </div>
         <div class="address-select-btn">
@@ -27,11 +27,11 @@
       </div>
     </div>
     <el-drawer
-      title="我是标题"
+      title="选择地址"
       :visible.sync="drawer"
       :direction="direction"
       :before-close="handleClose">
-      <span>我来啦!</span>
+      <addressgrid :addrList="addrList" @childFn="parentFn"></addressgrid>
     </el-drawer>
 
     <cartsubmitgrid :orderList="orderList"></cartsubmitgrid>
@@ -52,10 +52,12 @@
 <script>
 import navbar from '../../components/navBar.vue'
 import cartsubmitgrid from '../../components/cartSubmitGrid.vue'
+import addressgrid from '../../components/addressGrid.vue'
 export default {
   components: {
     navbar,
-    cartsubmitgrid
+    cartsubmitgrid,
+    addressgrid
   },
   data () {
     return {
@@ -64,16 +66,16 @@ export default {
       num: 1,
       fit: 'contain',
       addrList: [],
-      orderList: []
+      orderList: [],
+      chosenAddr: {}
     }
   },
   methods: {
     handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+      done()
+    },
+    parentFn (childData) {
+      this.chosenAddr = childData
     }
   },
   computed: {
@@ -149,12 +151,12 @@ export default {
 .address-container{
   width: 100%;
   height: 150px;
-  border: 1px solid;
+  border: 1px solid rgb(148, 148, 148);
 }
 .address-grid{
   width: 50%;
   height: 100%;
-  border: 1px solid;
+  border: 1px solid rgb(163, 163, 163);
   left: 50%;
   transform: translate(-50%);
   position: relative;
@@ -162,7 +164,6 @@ export default {
 .address-info{
   width: 80%;
   height: 60%;
-  border: 1px solid;
   left: 50%;
   top: 5%;
   transform: translate(-50%);
@@ -171,7 +172,6 @@ export default {
 .address-select-btn{
   width: 80%;
   height: 30%;
-  border: 1px solid;
   left: 50%;
   top: 5%;
   transform: translate(-50%);
@@ -186,8 +186,8 @@ export default {
 .address-name-phone-container{
   width: 100%;
   height: 35%;
-  border: 1px solid;
   position: relative;
+  margin-bottom: 20px;
 }
 .address-name-container{
   width: 48%;
@@ -195,18 +195,26 @@ export default {
   position: relative;
   float: left;
 }
+.address-name-container span{
+  font-size: 25px;
+}
 .address-phone-container{
   width: 50%;
   height: 100%;
   position: relative;
   float: left;
 }
+.address-phone-container span{
+  color: rgb(230, 0, 0);
+}
 .address-info-container{
   width: 100%;
   height: 60%;
-  border: 1px solid;
   position: relative;
   overflow: hidden;
+}
+.address-info-container span{
+  color: rgb(133, 133, 133);
 }
 .cart-submit-order{
   width: 100%;
