@@ -4,62 +4,59 @@
       <navbar></navbar>
     </header>
 
-    <div class="review-grid">
-      <div class="review-remark-container">
-
-      </div>
-      <div class="review-star-container">
-        <el-rate
-          class="review-star"
-          v-model="value"
-          disabled
-          show-score
-          text-color="#ff9900"
-          score-template="{value}">
-        </el-rate>
-      </div>
-    </div>
+    <reviewgrid :reviewList="reviewList"></reviewgrid>
   </div>
 </template>
 
 <script>
 import navbar from '../../components/navBar.vue'
+import reviewgrid from '../review/reviewGrid.vue'
 export default {
   components: {
-    navbar
+    navbar,
+    reviewgrid
   },
   data () {
     return {
-      value: 0
+      value: 0,
+      customerId: '',
+      reviewList: []
     }
+  },
+  methods: {
+    getReview () {
+      this.$http.get('review/search', {
+        params: {
+          customer_id: this.customerId
+        }
+      }).then(response => {
+        const reviewIds = response.data.review_ids
+
+        reviewIds.forEach(reviewId => {
+          this.$http.get('review/' + reviewId, {})
+            .then(response => {
+              const review = {}
+              review.reviewId = reviewId
+              review.remark = response.data.remark
+              review.star = response.data.star > 5 ? 5 : response.data.star
+              review.createdTime = response.data.created_time
+              this.reviewList.push(review)
+            }).catch(err => {
+              console.log(err)
+            })
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  mounted: function () {
+    this.customerId = this.$route.params.customerId
+    this.getReview()
   }
 }
 </script>
 
 <style lang="less" scoped>
-.review-grid{
-  width: 50%;
-  height: 120px;
-  border: 1px solid;
-  left: 50%;
-  transform: translate(-50%);
-  position: relative;
-  margin-top: 10px;
-}
-.review-remark-container{
-  width: 100%;
-  height: 80px;
-  border: 1px solid;
-}
-.review-star-container{
-  width: 100%;
-  height: 38px;
-  border: 1px solid;
-}
-.review-star{
-  left: 5%;
-  top: 50%;
-  position: relative;
-  transform: translate(0, -50%);
-}
+
 </style>

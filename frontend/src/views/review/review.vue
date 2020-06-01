@@ -60,6 +60,7 @@ export default {
         }
       }).then(() => {
         this.$message.success('评价成功')
+        this.$router.push('/customer')
       }).catch(err => {
         console.log(err)
       })

@@ -4,83 +4,77 @@
       <navbar></navbar>
     </header>
 
-    <div class="address-grid-container">
-      <div class="address-grid">
-        <div class="address info">
-          <p><span>收件人姓名：</span></p>
-          <p><span>收件人手机号：</span></p>
-          <p><span>详细地址：</span></p>
-        </div>
-        <div class="delete-address-btn-container">
-          <el-button type="danger" class="delete-address-btn">删除</el-button>
-        </div>
-      </div>
-    </div>
-
-    <div class="address-grid-container">
-      <div class="address-grid">
-        <div class="address info">
-          <p><span>收件人姓名：</span></p>
-          <p><span>收件人手机号：</span></p>
-          <p><span>详细地址：</span></p>
-        </div>
-        <div class="delete-address-btn-container">
-          <el-button type="danger" class="delete-address-btn">删除</el-button>
-        </div>
-      </div>
-    </div>
+    <addressgrid :addrList="addrList"></addressgrid>
 
     <div class="add-address-btn-container">
-      <el-button type="success" class="add-address-btn">新增地址</el-button>
+      <el-button @click="onAddAddressClicked" type="success" class="add-address-btn">新增地址</el-button>
     </div>
   </div>
 </template>
 
 <script>
 import navbar from '../../components/navBar.vue'
+import addressgrid from './addressGrid.vue'
 export default {
   components: {
-    navbar
+    navbar,
+    addressgrid
+  },
+  data () {
+    return {
+      addrList: []
+    }
+  },
+  methods: {
+    onAddAddressClicked () {
+      this.$router.push({
+        name: 'customerAddressAdd',
+        query: {
+          editType: 'addNewAddress'
+        }
+      })
+    }
+  },
+  mounted: function () {
+    this.$http.get('address', {
+      headers: {
+        Authorization: window.sessionStorage.getItem('token')
+      }
+    }).then(response => {
+      response.data.addrs.forEach((addr, index) => {
+        this.addrList.push({
+          id: index,
+          name: addr.receiver,
+          tel: addr.phone,
+          address: addr.address,
+          addressId: addr.id
+        })
+      })
+    }).catch(err => {
+      if (err.response.status === 401) {
+        this.$router.push({ name: 'customerLogin' })
+      }
+      console.error(err)
+    })
   }
 }
 </script>
 
 <style lang="less" scoped>
-.address-grid{
-  width: 400px;
-  height: 200px;
-  border: 1px solid;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
-  margin-top: 30px;
-  padding-left: 10px;
-  padding-top: 10px;
-}
-.delete-address-btn-container{
-  width: 100px;
-  height: 40px;
-  position: relative;
-  left: 50%;
-  transform: translate(-50%);
-}
-.address-grid-container{
-  width: 100%;
-  height: 240px;
-}
-.delete-address-btn{
-  width: 100px;
-}
 .add-address-btn-container{
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  height: 40px;
+  height: 70px;
   margin-top: 30px;
+  border: 1px solid rgb(134, 134, 134);
+  background-color: #fff;
 }
 .add-address-btn{
   position: relative;
   left: 50%;
-  transform: translate(-50%);
-  width: 100px;
-
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
 }
 </style>

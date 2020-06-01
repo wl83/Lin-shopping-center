@@ -125,4 +125,4 @@ class ReviewSearch(Resource):
         for review in reviews.items:
             output.append(review.id)
 
-        return {'review_ids': output, 'total':total}, 200
+        return {'review_ids': output, 'total': total}, 200

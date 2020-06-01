@@ -37,7 +37,7 @@
             <el-button @click="onReviewClicked" icon="el-icon-edit-outline" type="warning" plain class="btn">历史评价</el-button>
           </div>
           <div class="customer-manage-grid">
-            <el-button icon="el-icon-location-information" type="primary" plain class="btn">编辑地址</el-button>
+            <el-button @click="onAddressEditClicked" icon="el-icon-location-information" type="primary" plain class="btn">编辑地址</el-button>
           </div>
           <div class="customer-manage-grid">
             <el-button icon="el-icon-document-delete" type="info" plain class="btn" @click="onLogoutClicked">退出登录</el-button>
@@ -56,18 +56,25 @@ export default {
   },
   data () {
     return {
+      customerId: '',
       url: '',
       phone: '',
       nickname: '',
       gender: '',
       created_time: '',
       image: '',
-      fit: 'cover'
+      fit: 'contain'
     }
   },
   methods: {
+    onAddressEditClicked () {
+      this.$router.push({ name: 'customerAddress' })
+    },
     onReviewClicked () {
-
+      this.$router.push({
+        name: 'customerReviews',
+        params: { customerId: this.customerId }
+      })
     },
     onLogoutClicked () {
       this.$confirm('此操作将退出登录, 是否继续?', '提示', {
@@ -101,6 +108,7 @@ export default {
         authorization: window.sessionStorage.getItem('token')
       }
     }).then(response => {
+      this.customerId = response.data.customer_id
       this.phone = response.data.phone
       this.nickname = response.data.nickname
       this.gender = (response.data.gender === 1 ? '男' : '女')
