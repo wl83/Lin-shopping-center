@@ -2,7 +2,7 @@
   <div class="cart-wrapper">
     <div class="cart-item-grid" v-for="(cartitem, index) in cartitems" :key="index">
       <div class="cart-item-checkbox-container">
-        <el-checkbox class="cart-item-checkbox" v-model="cartitem.selected"></el-checkbox>
+        <el-checkbox @change="onItemChanged(cartitem)" class="cart-item-checkbox" v-model="cartitem.selected"></el-checkbox>
       </div>
       <div class="cart-item-other-info-container">
       <div class="item-image-container">
@@ -23,7 +23,7 @@
         </div>
         <div class="item-number-more">
           <div class="item-number-container">
-            <el-input-number size="small" class="item-number" v-model="cartitem.count" :min='0' @change="handleChange" label="选择数量"></el-input-number>
+            <el-input-number @change="onItemChanged(cartitem)" size="small" class="item-number" v-model="cartitem.count" :min='0' label="选择数量"></el-input-number>
           </div>
           <div class="item-more-info">
             <el-link @click="onMoreInfoClicked(cartitem)" class="item-link"><i class="el-icon-view el-icon--right"></i>查看详情</el-link>
@@ -47,11 +47,22 @@ export default {
     }
   },
   methods: {
-    handleChange () {
-
-    },
     onMoreInfoClicked (cartitem) {
       this.$router.push({ name: 'item', params: { itemId: cartitem.itemId } })
+    },
+    onItemChanged (item) {
+      this.$http.put('cart', {
+        item_id: item.itemId,
+        selected: item.selected,
+        count: item.count
+      }, {
+        headers: {
+          Authorization: window.sessionStorage.getItem('token')
+        }
+      }).then(() => {})
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }

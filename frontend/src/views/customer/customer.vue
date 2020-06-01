@@ -34,7 +34,7 @@
             <el-button @click="onOrderClicked" icon="el-icon-notebook-1" type="success" plain class="btn">全部订单</el-button>
           </div>
           <div class="customer-manage-grid">
-            <el-button icon="el-icon-edit-outline" type="warning" plain class="btn">历史评价</el-button>
+            <el-button @click="onReviewClicked" icon="el-icon-edit-outline" type="warning" plain class="btn">历史评价</el-button>
           </div>
           <div class="customer-manage-grid">
             <el-button icon="el-icon-location-information" type="primary" plain class="btn">编辑地址</el-button>
@@ -66,6 +66,9 @@ export default {
     }
   },
   methods: {
+    onReviewClicked () {
+
+    },
     onLogoutClicked () {
       this.$confirm('此操作将退出登录, 是否继续?', '提示', {
         confirmButtonText: '确定',

@@ -74,7 +74,6 @@ export default {
           }
         }).then(response => {
            // 登录成功后的操作
-          console.log(response)
           this.$message.success('登录成功!')
           window.sessionStorage.setItem('token', response.data.token)
           this.$router.push('/')

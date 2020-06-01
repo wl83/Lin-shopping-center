@@ -5,7 +5,6 @@ import './plugins/element.js'
 import './css/global.css'
 import './css/navbar.css'
 import './css/itemgrid.css'
-import './css/ordergrid.css'
 import axios from 'axios'
 
 Vue.config.productionTip = false

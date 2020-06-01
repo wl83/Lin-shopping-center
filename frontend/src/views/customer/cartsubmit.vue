@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="cart-submit-btn">
-        <el-button type="success" class="cart-submit">下单</el-button>
+        <el-button @click="onSubmitClicked" type="success" class="cart-submit">下单</el-button>
       </div>
     </div>
   </div>
@@ -76,6 +76,35 @@ export default {
     },
     parentFn (childData) {
       this.chosenAddr = childData
+    },
+    onSubmitClicked () {
+      if (this.chosenAddr === {}) {
+        this.$message.error('请填写地址')
+        return
+      }
+      let addressId = 0
+      this.addrList.forEach(addr => {
+        if (addr.id === this.chosenAddr.id) {
+          addressId = addr.addressId
+        }
+      })
+
+      this.$http.post('order/create', {
+        address_id: addressId
+      }, {
+        headers: {
+          Authorization: window.sessionStorage.getItem('token')
+        }
+      }).then(response => {
+        this.$message.success('订单提交成功')
+        this.$router.push('/')
+      }).catch(err => {
+        if (err.response.data.message === 'Invalid address id') {
+          this.$message.error('请填写正确地址')
+        } else {
+          console.error(err)
+        }
+      })
     }
   },
   computed: {
@@ -119,26 +148,28 @@ export default {
 
       items.forEach((item, index) => {
         const tmpItem = {}
-        tmpItem.id = index
-        this.$http.get('items/' + item.item_id, {})
-          .then(response => {
-            if (item.selected) {
-              tmpItem.itemId = item.item_id
-              tmpItem.selected = item.selected
-              tmpItem.count = item.count
-              tmpItem.name = response.data.name
-              tmpItem.currentPrice = response.data.current_price
-              tmpItem.originalPrice = response.data.original_price
-              tmpItem.inStock = response.data.in_stock
-              tmpItem.info = response.data.info
-              tmpItem.sales = response.data.sales
-              tmpItem.shopId = response.data.shop_id
-              tmpItem.images = response.data.images
-              this.orderList.push(tmpItem)
-            }
-          }).catch(err => {
-            console.log(err)
-          })
+        if (item.selected) {
+          tmpItem.id = index
+          this.$http.get('items/' + item.item_id, {})
+            .then(response => {
+              if (item.selected) {
+                tmpItem.itemId = item.item_id
+                tmpItem.selected = item.selected
+                tmpItem.count = item.count
+                tmpItem.name = response.data.name
+                tmpItem.currentPrice = response.data.current_price
+                tmpItem.originalPrice = response.data.original_price
+                tmpItem.inStock = response.data.in_stock
+                tmpItem.info = response.data.info
+                tmpItem.sales = response.data.sales
+                tmpItem.shopId = response.data.shop_id
+                tmpItem.images = response.data.images
+                this.orderList.push(tmpItem)
+              }
+            }).catch(err => {
+              console.log(err)
+            })
+        }
       })
     }).catch(err => {
       console.log(err)

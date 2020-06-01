@@ -13,7 +13,9 @@ import Cart from '../views/customer/cart.vue'
 import CartSubmit from '../views/customer/cartSubmit.vue'
 import CustomerOrder from '../views/customer/customerOrder.vue'
 import CustomerReview from '../views/customer/customerReview.vue'
+import OrderDetail from '../views/order/orderDetail.vue'
 import Search from '../views/home/search.vue'
+import Review from '../views/review/review.vue'
 
 Vue.use(VueRouter)
 
@@ -79,6 +81,11 @@ const routes = [
     component: CustomerOrder
   },
   {
+    path: '/customer/orders/:orderId',
+    name: 'orderDetail',
+    component: OrderDetail
+  },
+  {
     path: '/customer/reviews',
     name: 'customerReviews',
     component: CustomerReview
@@ -87,6 +94,11 @@ const routes = [
     path: '/search',
     name: 'search',
     component: Search
+  },
+  {
+    path: '/customer/orders/:orderId/review/:itemId',
+    name: 'review',
+    component: Review
   }
 ]
 
