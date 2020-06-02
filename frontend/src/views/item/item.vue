@@ -46,11 +46,8 @@
               <p class="item-page-original-price"><span>¥{{ this.originalPrice }}</span></p>
             </div>
             <div class="item-page-buy-container">
-              <div class="item-page-input-number-container">
-                <el-input-number class="item-page-input-number" size="small" v-model="num" @change="handleChange" :min="1" label="描述文字"></el-input-number>
-              </div>
               <div class="item-page-in-cart-container">
-                <el-button class="item-page-in-cart-btn" type="primary">加入购物车</el-button>
+                <el-button @click="onInCartClicked" class="item-page-in-cart-btn" type="primary">加入购物车</el-button>
               </div>
             </div>
           </div>
@@ -100,8 +97,23 @@ export default {
     parentFn (childData) {
       this.value = childData
     },
-    handleChange () {
-
+    onInCartClicked () {
+      this.$http.post('cart', {
+        item_id: this.itemId
+      },
+      {
+        headers: {
+          Authorization: window.sessionStorage.getItem('token')
+        }
+      }).then(() => {
+        this.$message.success('成功加入购物车')
+      }).catch(err => {
+        if (err.response.status === 400) {
+          this.$message.error('该商品已在购物车')
+        } else if (err.response.status === 401) {
+          this.$router.push('/customer/login')
+        }
+      })
     }
   },
   mounted: function () {
@@ -181,10 +193,11 @@ export default {
   height: 100%;
 }
 .item-page-intro-container{
-  width: 100%;
-  height: 72%;
+  width: 96%;
+  height: 70%;
   border: 1px solid rgb(170, 170, 170);
   margin-top: 10px;
+  padding: 10px 10px 10px 10px;
 }
 .item-page-name-container{
   width: 100%;
@@ -214,17 +227,12 @@ export default {
   height: 15%;
 }
 .item-page-price-container{
-  width: 50%;
+  width: 70%;
   height: 100%;
   float: left;
 }
 .item-page-buy-container{
-  width: 49%;
-  height: 100%;
-  float: left;
-}
-.item-page-input-number-container{
-  width: 49%;
+  width: 29%;
   height: 100%;
   float: left;
 }
@@ -232,12 +240,6 @@ export default {
   width: 49%;
   height: 100%;
   float: left;
-}
-.item-page-input-number{
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  position: relative;
 }
 .item-page-in-cart-btn{
   left: 50%;
@@ -252,12 +254,12 @@ export default {
   color: rgb(122, 122, 122);
 }
 .item-page-star-title-container{
-  width: 10%;
+  width: 15%;
   height: 100%;
   float: left;
 }
 .item-page-rate-container{
-  width: 89%;
+  width: 84%;
   height: 100%;
   float: left;
 }

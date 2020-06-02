@@ -116,6 +116,8 @@ export default {
   transform: translate(-50%);
   position: relative;
   border: 1px solid rgb(155, 155, 155);
+  border-top: 0px;
+  border-bottom: 0px;
   padding-left: 10px;
   padding-right: 10px;
 }

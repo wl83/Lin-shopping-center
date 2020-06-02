@@ -65,7 +65,7 @@ export default {
           return
         }
         if (!this.isMobileNumber(this.customerLoginForm.phone)) {
-          return this.$message.error("手机号格式错误!")
+          return this.$message.error('手机号格式错误!')
         }
         await this.$http.get('customer/login', {
           params: {

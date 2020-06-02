@@ -23,10 +23,13 @@
         </div>
         <div class="item-number-more">
           <div class="item-number-container">
-            <el-input-number @change="onItemChanged(cartitem)" size="small" class="item-number" v-model="cartitem.count" :min='0' label="选择数量"></el-input-number>
+            <el-input-number @change="onItemChanged(cartitem)" size="small" class="item-number" v-model="cartitem.count" :min='1' label="选择数量"></el-input-number>
           </div>
           <div class="item-more-info">
             <el-link @click="onMoreInfoClicked(cartitem)" class="item-link"><i class="el-icon-view el-icon--right"></i>查看详情</el-link>
+          </div>
+          <div class="item-delete-btn-container">
+            <el-button @click="onDeleteClicked(cartitem)" type="danger" icon="el-icon-delete" circle></el-button>
           </div>
         </div>
       </div>
@@ -63,6 +66,29 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    onDeleteClicked (cartitem) {
+      this.$confirm('此操作将从购物车中删除该商品，是否继续？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.delete('cart', {
+          headers: {
+            Authorization: window.sessionStorage.getItem('token')
+          },
+          params: {
+            item_id: cartitem.itemId
+          }
+        }).then(() => {
+          this.$router.go(0)
+          this.$message.success('成功删除该商品')
+        }).catch(err => {
+          console.log(err)
+        })
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
@@ -144,13 +170,13 @@ export default {
   height: 40px;
 }
 .item-number-container{
-  width: 60%;
+  width: 48%;
   height: 40px;
   position: relative;
   float: left;
 }
 .item-more-info{
-  width: 39%;
+  width: 38%;
   height: 40px;
   float: left;
 }
@@ -163,5 +189,11 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
+}
+.item-delete-btn-container{
+  width: 12%;
+  height: 100%;
+  position: relative;
+  float: left;
 }
 </style>

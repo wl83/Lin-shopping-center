@@ -32,6 +32,9 @@
       :direction="direction"
       :before-close="handleClose">
       <addressgrid :addrList="addrList" @childFn="parentFn"></addressgrid>
+      <div class="address-add-container">
+        <el-button @click="onAddAddressClicked" class="address-add-btn" type="success">新增地址</el-button>
+      </div>
     </el-drawer>
 
     <cartsubmitgrid :orderList="orderList"></cartsubmitgrid>
@@ -71,6 +74,15 @@ export default {
     }
   },
   methods: {
+    onAddAddressClicked () {
+      this.$router.push({
+        name: 'customerAddressAdd',
+        query: {
+          editType: 'addNewAddress',
+          from: 'customerCartSubmit'
+        }
+      })
+    },
     handleClose (done) {
       done()
     },
@@ -101,6 +113,8 @@ export default {
       }).catch(err => {
         if (err.response.data.message === 'Invalid address id') {
           this.$message.error('请填写正确地址')
+        } else if (err.response.data.item_id) {
+          this.$message.error('某商品库存不足')
         } else {
           console.error(err)
         }
@@ -183,11 +197,13 @@ export default {
   width: 100%;
   height: 150px;
   border: 1px solid rgb(148, 148, 148);
+  border-top: 0px;
 }
 .address-grid{
-  width: 50%;
+  width: 51%;
   height: 100%;
   border: 1px solid rgb(163, 163, 163);
+  border-bottom: 0px;
   left: 50%;
   transform: translate(-50%);
   position: relative;
@@ -259,6 +275,9 @@ export default {
   width: 50%;
   height: 70px;
   border: 1px solid rgb(149, 149, 149);
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
   float: left;
 }
 .cart-total-price-wrapper{
@@ -278,6 +297,7 @@ export default {
   height: 70px;
   border: 1px solid rgb(158, 158, 158);
   border-right: 0px;
+  border-top: 0px;
   float: left;
 }
 .cart-submit{
@@ -287,5 +307,17 @@ export default {
   top: 50%;
   transform: translate(0,-50%);
 }
-
+.address-add-container{
+  width: 100%;
+  height: 10%;
+  position: fixed;
+  bottom: 0;
+  background-color: #fff;
+}
+.address-add-btn{
+  width: 100px;
+  position: absolute;
+  left: 12%;
+  top: 20%;
+}
 </style>

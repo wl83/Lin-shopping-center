@@ -48,7 +48,7 @@ export default {
       if (this.groupIndex === 0) {
         return this.$message.warning('不能往前了～')
       }
-      this.groupIndex -= 1
+      this.groupIndex--
       this.search(
         this.itemName,
         this.rankType,
@@ -56,7 +56,7 @@ export default {
       )
     },
     onNextChangeClicked () {
-      this.groupIndex += 1
+      this.groupIndex++
       this.search(
         this.itemName,
         this.rankType,

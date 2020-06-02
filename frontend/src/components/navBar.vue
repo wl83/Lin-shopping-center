@@ -68,5 +68,42 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+header{
+    width: 100%;
+    height: 60px;
+    border: 1px solid rgb(212, 212, 212);
+  }
+  .login-logo{
+    width: 200px;
+    float: left;
+    padding-top: 15px;
+    margin-left: 100px;
+  }
+  .search-query{
+    width: 650px;
+    height: 60px;
+    float: left;
+    padding-top: 10px;
+  }
+  .nav-menu{
+    width: 300px;
+    float: right;
+  }
+  .login-logo a{
+    text-align: center;
+    text-decoration: none;
+    margin-top: 20px;
+  }
+  .login-logo span{
+    color: #409EFF;
+    font-size: 20px;
+  }
+  .search-query-input{
+    width: 300px;
+    margin-left: 250px;
+    float: left;
+  }
+  .search-btn{
+    float: left;
+  }
 </style>

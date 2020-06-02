@@ -100,8 +100,8 @@ class ShopRegister(Resource):
         args = shop_reg_parser.parse_args()
 
         # 检查验证码
-        if not check_captcha(args.captcha_identifer, args.captcha_code):
-            return {'message': 'Wrong captcha code!'}, 400
+        # if not check_captcha(args.captcha_identifer, args.captcha_code):
+        #     return {'message': 'Wrong captcha code!'}, 400
 
         password_hash = generate_password_hash(args['password'])
         new_shop = Shop(name=args.name,

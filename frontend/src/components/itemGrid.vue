@@ -15,7 +15,7 @@
       <div class="item-price">
         <el-link type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
         <p><span class="price">¥ {{ item.current_price }}</span></p>
-        <p><span class="stock">销量: {{ item.in_stock }}</span></p>
+        <p><span class="stock">销量: {{ item.sales }}</span></p>
       </div>
       <div class="in-cart">
         <el-button @click="onInCartClicked(item)" type="primary" class="in-cart-btn">加入购物车</el-button>

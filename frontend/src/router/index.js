@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/home/home.vue'
 import UserLogin from '../components/UserLogin.vue'
 import ShopLogin from '../components/ShopLogin.vue'
+import ShopRegister from '../components/ShopRegister.vue'
 import UserRegister from '../components/UserRegister.vue'
 import Item from '../views/item/item.vue'
 import Customer from '../views/customer/customer.vue'
@@ -34,6 +35,11 @@ const routes = [
     path: '/shop/login',
     name: 'shopLogin',
     component: ShopLogin
+  },
+  {
+    path: '/shop/register',
+    name: 'shopRegister',
+    component: ShopRegister
   },
   {
     path: '/customer/register',

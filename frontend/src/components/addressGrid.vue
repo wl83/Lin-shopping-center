@@ -20,6 +20,7 @@
         </el-checkbox>
       </el-checkbox-group>
     </div>
+    <div style="height: 100px;"></div>
   </div>
 </template>
 
@@ -57,13 +58,12 @@ export default {
   position: relative;
 }
 .address-grid-checkbox{
-  width: 90%;
+  width: 85%;
   height: 30%;
   position: relative;
-  border: 1px solid;
+  border: 1px solid rgb(156, 156, 156);
   margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 10px 10px 10px;
 }
 .address-grid-name-container{
   width: 100%;

@@ -76,7 +76,11 @@ export default {
             }
           }).then(response => {
             this.$message.success('新增地址成功')
-            this.$router.push('/customer/address')
+            if (this.$route.query.from === 'customerCartSubmit') {
+              this.$router.push('/customer/cart/submit')
+            } else {
+              this.$router.push('/customer/address')
+            }
           }).catch(err => {
             console.log(err)
           })
