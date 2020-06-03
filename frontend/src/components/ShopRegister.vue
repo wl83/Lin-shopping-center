@@ -33,12 +33,12 @@
               placeholder="请输入店铺简介"
               v-model="shopRegisterForm.info"
               maxlength="100"
-              :rows="3"
+              :rows='3'
               show-word-limit
             >
             </el-input>
           </el-form-item>
-          <el-form-item class="form-item">
+          <el-form-item class="form-item" prop="button">
             <el-button type="primary" class="register-btn" @click="shopRegister">注册</el-button>
           </el-form-item>
         </el-form>
@@ -78,7 +78,9 @@ export default {
         passwordAgain: '',
         name: '',
         address: '',
-        info: ''
+        info: '',
+        captchaIdentifer: '',
+        captchaCode: ''
       },
       shopRegisterFormRules: {
         phone: [
@@ -101,6 +103,9 @@ export default {
         ],
         info: [
           { required: true, message: '请输入店铺简介', trigger: 'blur' }
+        ],
+        button: [
+
         ]
       }
     }
@@ -121,8 +126,10 @@ export default {
           phone: this.shopRegisterForm.phone,
           password: this.shopRegisterForm.password,
           name: this.shopRegisterForm.name,
+          info: this.shopRegisterForm.info,
           address: this.shopRegisterForm.address,
-          info: this.shopRegisterForm.info
+          captcha_identifer: this.shopRegisterForm.captchaIdentifer,
+          captcha_code: this.shopRegisterForm.captchaCode
         }).then(() => {
           this.$message.success('注册成功!')
           this.$router.push({ name: 'shopLogin' })

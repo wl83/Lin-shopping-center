@@ -17,6 +17,7 @@ import CustomerReview from '../views/customer/customerReview.vue'
 import OrderDetail from '../views/order/orderDetail.vue'
 import Search from '../views/home/search.vue'
 import Review from '../views/review/review.vue'
+import ShopManage from '../views/shop/shopManage.vue'
 
 Vue.use(VueRouter)
 
@@ -105,6 +106,11 @@ const routes = [
     path: '/customer/orders/:orderId/review/:itemId',
     name: 'review',
     component: Review
+  },
+  {
+    path: '/shop/management',
+    name: 'shopManage',
+    component: ShopManage
   }
 ]
 
@@ -127,8 +133,11 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  const tokenStr = window.sessionStorage.getItem('token')
-  if (!tokenStr) return next('/customer/login')
+  const tokenStr1 = window.sessionStorage.getItem('token')
+  const tokenStr2 = window.sessionStorage.getItem('shoptoken')
+  if (!tokenStr1 && !tokenStr2) {
+    return next('/customer/login')
+  }
   next()
 })
 

@@ -74,8 +74,8 @@ export default {
         }).then(response => {
           // 登录成功后的操作
           this.$message.success('登录成功!')
-          window.sessionStorage.setItem('token', response.data.token)
-          // this.$router.push('/')
+          window.sessionStorage.setItem('shoptoken', response.data.token)
+          this.$router.push({ name: 'shop' })
         }).catch(err => {
           console.log(err)
           return this.$message.error('登录失败!')

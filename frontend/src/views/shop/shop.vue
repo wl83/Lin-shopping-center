@@ -1,48 +1,46 @@
 <template>
-<div class="shop-center-container">
-  <header>
-    <navbar></navbar>
-  </header>
+  <div class="shop-index-wrapper">
+    <header>
+      <navbar></navbar>
+    </header>
 
-  <div class="shop-info">
-    <div class="shop-image-container">
-
-    </div>
-    <div class="shop-info-container">
-      <div class="shop-info-name">
-        <h1><span>华中科技大学华为旗舰店</span></h1>
+    <div class="shop-index-info-container">
+      <div class="shop-index-intro-container">
+        <div class="shop-title-container">
+          <span>{{ this.name }}</span>
+        </div>
+        <div class="shop-address-container">
+          <i class="el-icon-location-outline"></i>
+          <span>{{ this.address }}</span>
+        </div>
+        <div class="shop-info-container">
+          <i class="el-icon-document"></i>
+          <span>简介: {{ this.info }}</span>
+        </div>
+        <div class="shop-phone-container">
+          <i class="el-icon-phone-outline"></i>
+          <span>联系电话: {{ this.phone }}</span>
+        </div>
       </div>
-      <div class="shop-info-intro">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi ducimus magnam architecto doloremque obcaecati omnis. Molestiae deserunt veniam, obcaecati fuga eum fugit accusantium. Esse cumque voluptas nisi molestias asperiores. Facilis.</p>
-      </div>
-      <div class="shop-info-star">
-        <p>评价等级：</p>
-      </div>
-      <div class="add-item-container">
-        <el-button class="add-item-btn" type="success">添加商品</el-button>
-      </div>
+        <div class="shop-manage-container">
+          <div class="shop-manage-grid">
+            <el-button @click="onManageClicked" icon="el-icon-shopping-cart-2" type="primary" plain class="btn">管理商店</el-button>
+          </div>
+          <div class="shop-manage-grid">
+            <el-button icon="el-icon-notebook-1" type="success" plain class="btn">全部订单</el-button>
+          </div>
+          <div class="shop-manage-grid">
+            <el-button icon="el-icon-edit-outline" type="warning" plain class="btn">历史评价</el-button>
+          </div>
+          <div class="shop-manage-grid">
+            <el-button icon="el-icon-document-delete" type="danger" plain class="btn">注销商店</el-button>
+          </div>
+          <div class="shop-manage-grid">
+            <el-button @click="onLogOutClicked" icon="el-icon-setting" type="info" plain class="btn">退出登录</el-button>
+          </div>
+        </div>
     </div>
   </div>
-  <div class="shop-item-list">
-    <div class="item-grid">
-      <div class="item-image-grid">
-        <el-image
-          :src="url"
-          class="item-image"
-          :fit="cover"></el-image>
-      </div>
-      <div class="item-price">
-        <el-link type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
-        <p><span class="price">¥100</span></p>
-        <p><span class="stock">销量：100</span></p>
-      </div>
-      <div class="in-cart">
-        <el-button type="primary" class="in-cart-btn">加入购物车</el-button>
-      </div>
-    </div>
-  </div>
-
-</div>
 </template>
 
 <script>
@@ -53,64 +51,115 @@ export default {
   },
   data () {
     return {
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      shopId: '',
+      phone: '',
+      name: '',
+      address: '',
+      info: ''
     }
+  },
+  methods: {
+    onManageClicked () {
+      this.$router.push({ name: 'shopManage', params: { shopId: this.shopId } })
+    },
+    onLogOutClicked () {
+      this.$confirm('此操作将退出登录, 是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        window.sessionStorage.clear()
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        })
+        this.$router.push('shop/login')
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      })
+    }
+  },
+  mounted: function () {
+    this.$http.get('shop', {
+      headers: {
+        Authorization: window.sessionStorage.getItem('shoptoken')
+      }
+    }).then(response => {
+      this.shopId = response.data.shop_id
+      this.name = response.data.name
+      this.phone = response.data.phone
+      this.address = response.data.address
+      this.info = response.data.info
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>
 
 <style lang="less" scoped>
-.shop-info{
-  width: 100%;
-  height: 400px;
-  border: 1px solid;
-  padding: 10px 10px 10px 10px;
-}
-.shop-image-container{
-  width: 350px;
-  height: 390px;
-  border: 1px solid;
-  margin-left: 50px;
-  float: left;
-}
-.shop-info-container{
-  width: 850px;
-  height: 390px;
-  border: 1px solid;
-  float: left;
-  margin-left: 70px;
-  padding-left: 20px;
-}
-.shop-info-name{
-  border: 1px solid;
-}
-.shop-info-intro{
-  border: 1px solid;
-  height: 200px;
-}
-.shop-info-star{
-  border: 1px solid;
-  height: 90px;
-  width: 50%;
-  float: left;
-}
-.shop-item-list{
-  width: 100%;
-  height: 800px;
-  border: 1px solid;
-  margin-top: 30px;
-}
-.add-item-container{
-  width: 49%;
-  height: 90px;
-  float: left;
-  border: 1px solid;
-}
-.add-item-btn{
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  position: relative;
-  width: 120px;
-}
+  .shop-index-wrapper{
+    width: 100%;
+    height: 700px;
+  }
+  .shop-index-info-container{
+    width: 60%;
+    height: 60%;
+    border: 1px solid rgb(160, 160, 160);
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 10px 10px 10px;
+  }
+  .shop-index-intro-container{
+    width: 70%;
+    height: 95%;
+    border: 1px solid;
+    float: left;
+  }
+  .shop-manage-container{
+    width: 28%;
+    height: 95%;
+    border: 1px solid;
+    float: right;
+  }
+  .shop-title-container{
+    width: 100%;
+    height: 25%;
+  }
+  .shop-title-container span{
+    position: relative;
+    top: 25%;
+    font-size: 25px;
+  }
+  .shop-address-container{
+    width: 100%;
+    height: 20%;
+  }
+  .shop-address-container span{
+    color: rgb(144, 144, 144);
+  }
+  .shop-info-container{
+    width: 100%;
+    height: 20%;
+  }
+  .shop-phone-container{
+    width: 100%;
+    height: 20%;
+  }
+  .shop-manage-grid{
+    width: 100%;
+    height: 15%;
+    margin-top: 10px;
+  }
+  .shop-manage-grid .btn{
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 </style>

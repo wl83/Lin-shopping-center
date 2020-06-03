@@ -49,7 +49,16 @@ export default {
           break
         }
         case '3': {
-          this.$router.replace('/customer')
+          const tokenStr1 = window.sessionStorage.getItem('token')
+          const tokenStr2 = window.sessionStorage.getItem('shoptoken')
+          if (!tokenStr1 && !tokenStr2) {
+            this.$router.replace('/customer/login')
+          } else if (!tokenStr1 && tokenStr2) {
+            this.$router.replace('/shop')
+          } else {
+            this.$router.replace('/customer')
+          }
+
           break
         }
       }
