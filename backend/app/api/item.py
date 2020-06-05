@@ -102,10 +102,13 @@ class ItemQuery(Resource):
         reviews = Review.query.filter_by(item_id=item_id).all()
 
         starValue = 0
-        for review in reviews:
-            starValue += review.star
-        starValue /= len(reviews)
-        item_data['star_value'] = starValue
+        if len(reviews) > 0:
+            for review in reviews:
+                starValue += review.star
+            starValue /= len(reviews)
+            item_data['star_value'] = starValue
+        else:
+            item_data['star_value'] = 0
 
         return item_data, 200
 
@@ -131,7 +134,7 @@ class ItemManagement(SecureShopResource):
                 (2) original_price(可选), decimal, 商品原价;
                 (3) current_price(可选), decimal, 商品原价;
                 (4) in_stock(可选), int, 商品库存;
-                (5) info(可选), str, 商品介绍;
+                (5) (可选), str, 商品介绍;
                 (6) item_class(可选), str, 商品类别
                 (7) images, {base64 blob (可选)} 数组, 商品图片
         return: (1) 成功, status code 200
@@ -256,6 +259,44 @@ class ItemSearch(Resource):
             output.append(item.id)
 
         return {'item_ids': output, 'total': total}, 200
+
+@api.route('/items/shop')
+class ItemShop(SecureShopResource):
+    """
+    商店获取商品
+    URL : /api/items/shop
+    method: GET
+    extra : 需要店铺登录凭证
+    args: 无
+    return: (1) 成功, status code 200
+                a. current_price, decimal, 商品售价;
+                b. original_price, decimal, 商品原价;
+                c. in_stock, int, 商品库存;
+                d. info, str, 商品介绍;
+                e. sales, int, 商品销量
+                g. item_class, str, 商品类别
+                h. name, str, 商品名
+            (2) 失败, status code 400
+                a. message, str, 错误信息
+    """
+    def get(self, auth_shop):
+        items = Item.query.filter_by(shop_id=auth_shop.id)
+
+        items_data = []
+        for item in items:
+            if not item.deleted:
+                item_data = {}
+                item_data['item_id'] = item.id
+                item_data['name'] = item.name
+                item_data['current_price'] = str(round(item.current_price, 2))
+                item_data['original_price'] = str(round(item.original_price, 2))
+                item_data['info'] = item.info
+                item_data['item_class'] = item.item_class
+                item_data['in_stock'] = item.in_stock
+                item_data['sales'] = item.sales
+
+                items_data.append(item_data)
+        return {'items': items_data}
 
 
 @api.route('/items')

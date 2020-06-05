@@ -18,6 +18,9 @@ import OrderDetail from '../views/order/orderDetail.vue'
 import Search from '../views/home/search.vue'
 import Review from '../views/review/review.vue'
 import ShopManage from '../views/shop/shopManage.vue'
+import ShopOrder from '../views/shop/shopOrder.vue'
+import ShopItem from '../views/shop/shopItem.vue'
+import AddItem from '../views/item/addItem.vue'
 
 Vue.use(VueRouter)
 
@@ -111,6 +114,21 @@ const routes = [
     path: '/shop/management',
     name: 'shopManage',
     component: ShopManage
+  },
+  {
+    path: '/shop/orders',
+    name: 'shopOrders',
+    component: ShopOrder
+  },
+  {
+    path: '/shop/items',
+    name: 'shopItems',
+    component: ShopItem
+  },
+  {
+    path: '/shop/items/addNewItem',
+    name: 'addNewItem',
+    component: AddItem
   }
 ]
 

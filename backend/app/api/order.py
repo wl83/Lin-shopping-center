@@ -130,9 +130,9 @@ class OrderShopQuery(SecureShopResource):
         order_ids = select([OrderItem.order_id]).where(OrderItem.item_id == shop_item_ids).alias()
         orders = Order.query.filter(Order.id == order_ids.c.order_id).order_by(Order.id.desc())
 
-        ordersPage = orders.paginate(page=1 + group, per_page=GROUP_COUNT)
+        # ordersPage = orders.paginate(page=1 + group, per_page=GROUP_COUNT)
         output = []
-        for order in ordersPage.items:
+        for order in orders:
             output.append(order.id)
 
         return {'orders': output}, 200

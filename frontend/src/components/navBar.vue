@@ -39,18 +39,24 @@ export default {
   },
   methods: {
     handleSelect (index) {
+      const tokenStr1 = window.sessionStorage.getItem('token')
+      const tokenStr2 = window.sessionStorage.getItem('shoptoken')
       switch (index) {
         case '1': {
           this.$router.replace('/')
           break
         }
         case '2': {
-          this.$router.replace('/customer/cart')
+          if (tokenStr1) {
+            this.$router.replace('/customer/cart')
+          } else if (!tokenStr1 && tokenStr2) {
+            this.$message.warning('请登录顾客账号')
+          } else if (!tokenStr1 && !tokenStr2) {
+            this.$router.push('/customer/login')
+          }
           break
         }
         case '3': {
-          const tokenStr1 = window.sessionStorage.getItem('token')
-          const tokenStr2 = window.sessionStorage.getItem('shoptoken')
           if (!tokenStr1 && !tokenStr2) {
             this.$router.replace('/customer/login')
           } else if (!tokenStr1 && tokenStr2) {
