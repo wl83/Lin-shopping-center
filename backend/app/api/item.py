@@ -294,6 +294,11 @@ class ItemShop(SecureShopResource):
                 item_data['item_class'] = item.item_class
                 item_data['in_stock'] = item.in_stock
                 item_data['sales'] = item.sales
+                images = []
+                for imgRecord in item.images:
+                    img_data = b64encode(imgRecord.image)
+                    images.append(img_data.decode('utf-8'))
+                item_data['images'] = images
 
                 items_data.append(item_data)
         return {'items': items_data}

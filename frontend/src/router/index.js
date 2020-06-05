@@ -21,6 +21,7 @@ import ShopManage from '../views/shop/shopManage.vue'
 import ShopOrder from '../views/shop/shopOrder.vue'
 import ShopItem from '../views/shop/shopItem.vue'
 import AddItem from '../views/item/addItem.vue'
+import ShopReview from '../views/shop/shopReview.vue'
 
 Vue.use(VueRouter)
 
@@ -119,6 +120,11 @@ const routes = [
     path: '/shop/orders',
     name: 'shopOrders',
     component: ShopOrder
+  },
+  {
+    path: '/shop/reviews',
+    name: 'shopReviews',
+    component: ShopReview
   },
   {
     path: '/shop/items',

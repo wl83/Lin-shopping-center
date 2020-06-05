@@ -174,6 +174,7 @@ class OrderQueryShop(SecureShopResource):
         order_data['status'] = order.status.value
         order_data['created_time'] = str(order.created_time)
         order_data['payment_time'] = str(order.payment_time)
+        order_data['payment_amount'] = str(round(order.payment_amount, 2))
 
         output = []
         for order_item in order_items:

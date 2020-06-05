@@ -35,7 +35,15 @@
         <el-table-column
           prop="status"
           label="订单状态"
-          width="120">
+          width="100"
+          :filters="filters"
+          :filter-method="filterTag"
+          filter-placement="bottom-end">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status === ('待付款' || '异常') ? 'danger' : scope.row.tag === ('已付款' || '配送中' || '已送达') ? 'primary' : 'success' "
+              disable-transitions>{{ scope.row.status }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
           prop="address"
@@ -71,12 +79,28 @@ export default {
   data () {
     return {
       orderList: [],
-      orderIds: ''
+      orderIds: '',
+      orderStatus: ['待付款', '已付款', '配送中', '已送达', '已签收', '异常'],
+      filters: [
+        { text: '待付款', value: '待付款' },
+        { text: '已付款', value: '已付款' },
+        { text: '配送中', value: '配送中' },
+        { text: '已送达', value: '已送达' },
+        { text: '已签收', value: '已签收' },
+        { text: '异常', value: '异常' }
+      ]
     }
   },
   methods: {
     deleteRow (index, rows) {
       rows.splice(index, 1)
+    },
+    filterTag (value, row) {
+      return row.tag === value
+    },
+    filterHandler (value, row, column) {
+      const property = column.property
+      return row[property] === value
     }
   },
   mounted: function () {
@@ -100,6 +124,7 @@ export default {
           order.name = response.data.address.receiver
           order.phone = response.data.address.phone
           order.address = response.data.address.address
+          order.status = this.orderStatus[response.data.status]
 
           this.orderList.push(order)
         })

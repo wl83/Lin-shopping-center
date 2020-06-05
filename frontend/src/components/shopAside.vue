@@ -51,6 +51,7 @@ export default {
     onMenuSelected (index) {
       switch (index) {
         case '1': {
+          this.$router.push({ name: 'shopManage', params: { shopId: this.shopId } })
           break
         }
         case '2': {
@@ -62,6 +63,7 @@ export default {
           break
         }
         case '4': {
+          this.$router.push({ name: 'shopReviews', params: { shopId: this.shopId } })
           break
         }
         case '5': {
@@ -85,6 +87,33 @@ export default {
           break
         }
         case '6': {
+          this.$confirm('此操作将注销店铺，店铺内商品也将全部删除，是否继续？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http.delete('shop', {
+              shop_id: this.shopId
+            },
+            {
+              headers: {
+                Authorization: window.sessionStorage.getItem('shoptoken')
+              }
+            }).then(() => {
+              this.$message({
+                type: 'success',
+                message: '注销成功!'
+              })
+              this.$router.push('/')
+            }).catch(err => {
+              console.log(err)
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消注销'
+            })
+          })
           break
         }
       }

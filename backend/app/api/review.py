@@ -126,3 +126,22 @@ class ReviewSearch(Resource):
             output.append(review.id)
 
         return {'review_ids': output, 'total': total}, 200
+
+@api.route('/review/shop')
+class ReviewShop(Resource):
+    """
+    URL : /api/review/search
+    method: GET
+    args :  (1) item_id, int, 商品id
+    return: (1) 成功，status code 200
+                a. review_ids, {int}, 某商品的评价信息id集合
+            (2) 失败，status code 400
+                a. message, str, 错误信息
+    """
+    def get(self):
+        args = review_search_parser.parse_args()
+        reviews = Review.query.filter_by(item_id=args.item_id)
+        output = []
+        for review in reviews:
+            output.append(review.id)
+        return {'review_ids': output}, 200
