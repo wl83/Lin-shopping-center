@@ -11,9 +11,6 @@
       <div class="scroll-pict">
         <itemgrid :items="items"></itemgrid>
       </div>
-      <div class="page-container">
-        <p class="currentPage">{{ this.groupIndex+1 }}</p>
-      </div>
       <div class="right-arrow">
         <el-button @click="onNextClicked" class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
       </div>

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Tag, Col, Row, Dialog, Container, Aside, Submenu, MenuItemGroup, Table, TableColumn, Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, MessageBox, Select, Option, Upload, Image, Carousel, CarouselItem, InputNumber, Avatar, Drawer, Rate, Progress, Loading, Pagination, Checkbox, CheckboxGroup, Radio, RadioGroup, Divider } from 'element-ui'
+import { Card, Tag, Col, Row, Dialog, Container, Aside, Submenu, MenuItemGroup, Table, TableColumn, Button, Form, FormItem, Input, Menu, MenuItem, Link, Message, MessageBox, Select, Option, Upload, Image, Carousel, CarouselItem, InputNumber, Avatar, Drawer, Rate, Progress, Loading, Pagination, Checkbox, CheckboxGroup, Radio, RadioGroup, Divider } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -37,6 +37,7 @@ Vue.use(Dialog)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Tag)
+Vue.use(Card)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

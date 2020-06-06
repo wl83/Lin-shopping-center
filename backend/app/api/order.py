@@ -4,6 +4,7 @@ from .. import db
 from ..models import Order, Item, OrderItem, CartItem, Status, Review, Address
 from flask_restplus import reqparse
 from sqlalchemy import select
+import datetime
 
 # the number of each group of orders
 GROUP_COUNT = 5
@@ -284,3 +285,37 @@ class OrderQueryCustomer(SecureCustomerResource):
         order.status = Status(args.status)
         db.session.commit()
         return {}, 200
+
+@api.route('/shop/report')
+class OrderReport(SecureShopResource):
+    def get(self, auth_shop):
+        """
+        GET: 获取报表信息
+        URL : /api/shop/report
+        extra : 需要商户登录凭证
+        args:  无
+        return: (1) 成功，status code 200
+                    paymentList
+                (2) 失败，status code 400
+                    a. message, str, 错误信息
+                (3) 权限不足，status code 401
+        """
+        output = []
+        now_time = datetime.date.today()
+        one_day = datetime.timedelta(days=1)
+
+        time = now_time + one_day
+        for i in range(7):
+            time = time - one_day
+            payment_amount = 0
+            items = Item.query.filter_by(shop_id=auth_shop.id)
+            for item in items:
+                itemQuery = Item.query.filter_by(id=item.id).first_or_404()
+                order_items = OrderItem.query.filter_by(item_id=item.id)
+                for order_item in order_items:
+                    orderQuery = Order.query.filter_by(id=order_item.order_id).first_or_404()
+                    if orderQuery.created_time == time:
+                        payment_amount += order_item.amount * itemQuery.current_price
+            output.append(str(round(payment_amount, 2)))
+
+        return {'paymentList': output}

@@ -84,7 +84,7 @@ export default {
       images: [],
       itemid: '',
       shopId: '',
-      updateFlag: 'false',
+      updateFlag: false,
       addItemForm: {
         name: '',
         currentPrice: '',
@@ -223,6 +223,7 @@ export default {
   },
   mounted: function () {
     if (this.$route.query.editType === 'updateOldItem') {
+      this.updateFlag = true
       this.itemId = this.$route.params.itemId
 
       this.$http.get('items/' + this.itemId, {})

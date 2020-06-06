@@ -28,6 +28,11 @@
             <span slot="title">全部评价</span>
           </el-menu-item>
 
+          <el-menu-item index="7">
+            <i class="el-icon-data-line"></i>
+            <span slot="title">查看报表</span>
+          </el-menu-item>
+
           <el-menu-item index="5">
             <i class="el-icon-setting"></i>
             <span slot="title">退出登录</span>
@@ -114,6 +119,10 @@ export default {
               message: '已取消注销'
             })
           })
+          break
+        }
+        case '7': {
+          this.$router.push({ name: 'shopReport', params: { shopId: this.shopId } })
           break
         }
       }

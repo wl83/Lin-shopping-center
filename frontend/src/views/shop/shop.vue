@@ -8,7 +8,8 @@
       <shopaside :shopId="shopId" class="shop-aside-container"></shopaside>
     </div>
     <div class="shop-index-container">
-      <div class="shop-info-container">
+      <el-card class="box-card">
+        <div class="shop-info-container">
         <div class="shop-name-container">
           <span>{{ name }}</span>
         </div>
@@ -22,7 +23,12 @@
           <span>联系电话: {{ phone }}</span>
         </div>
       </div>
-      <div class="shop-data-container">
+      </el-card>
+
+      <div style="height: 20px;"></div>
+
+      <el-card class="box-card" id="box-card-2">
+        <div class="shop-data-container">
         <div class="shop-total-item-number-container">
           <div class="shop-total-item-number-titile">
             <span>
@@ -54,9 +60,9 @@
           </div>
         </div>
       </div>
-      <div class="shop-itemList-container">
-        <itemgrid :items="items"></itemgrid>
-      </div>
+      </el-card>
+
+      <itemgrid :items="items"></itemgrid>
     </div>
 
   </div>
@@ -171,7 +177,6 @@ export default {
   .shop-info-container{
     width: 95%;
     height: 25%;
-    border: 1px solid rgb(148, 148, 148);
     border-radius: 1em;
     margin-top: 10px;
     position: relative;
@@ -182,29 +187,13 @@ export default {
   }
   .shop-data-container{
     width: 95%;
-    height: 20%;
-    border: 1px solid rgb(148, 148, 148);
-    border-radius: 1em;
+    height: 100%;
     margin-top: 10px;
     position: relative;
-    left: 50%;
-    top: 2%;
-    transform: translate(-50%);
-  }
-  .shop-itemList-container{
-    width: 95%;
-    height: 60% auto;
-    /* border: 1px solid; */
-    border-radius: 1em;
-    margin-top: 10px;
-    position: relative;
-    left: 50%;
-    top: 2%;
-    transform: translate(-50%);
   }
   .shop-name-container{
     width: 100%;
-    height: 25%;
+    height: 50px;
     /* border: 1px solid; */
   }
   .shop-name-container span{
@@ -212,7 +201,7 @@ export default {
   }
   .shop-info-wrapper{
     width: 100%;
-    height: 30%;
+    height: 100px;
     /* border: 1px solid; */
   }
   .shop-info-wrapper span{
@@ -220,23 +209,22 @@ export default {
   }
   .shop-address-container{
     width: 100%;
-    height: 20%;
+    height: 30px;
     /* border: 1px solid; */
   }
   .shop-phone-container{
     width: 100%;
-    height: 20%;
+    height: 30px;
     /* border: 1px solid; */
   }
   .shop-total-item-number-container{
     width: 10%;
-    height: 70%;
-    border: 1px solid rgb(163, 163, 163);
+    height: 100px;
+    border: 1px solid rgb(192, 192, 192);
     border-radius: 1em;
     position: relative;
     left: 20%;
-    top: 50%;
-    transform: translate(-5%, -50%);
+    top: 25%;
     float: left;
     margin-right: 150px;
   }
@@ -260,5 +248,15 @@ export default {
     position: relative;
     top: 25%;
     color: rgb(221, 0, 0);
+  }
+  .box-card{
+    width: 95%;
+    margin-top: 30px;
+    position: relative;
+    left: 2%;
+    top: 2%;
+  }
+  #box-card-2{
+    height: 170px;
   }
 </style>
