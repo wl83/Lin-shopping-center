@@ -1,5 +1,5 @@
 from . import api
-from .resource import SecureShopResource
+from .resource import SecureShopResource, Resource
 from .. import db
 from ..models import Item, ItemImage, Review
 from flask_restplus import Resource, reqparse
@@ -253,21 +253,20 @@ class ItemSearch(Resource):
 
         total = itemOrdered.count()
 
-        itemsPage = itemOrdered.paginate(page=1 + group_index, per_page=GROUP_COUNT)
+        # itemsPage = itemOrdered.paginate(page=1 + group_index, per_page=GROUP_COUNT)
         output = []
-        for item in itemsPage.items:
+        for item in itemOrdered:
             output.append(item.id)
 
         return {'item_ids': output, 'total': total}, 200
 
-@api.route('/items/shop')
-class ItemShop(SecureShopResource):
+@api.route('/items/shop/<int:shop_id>')
+class ItemShop(Resource):
     """
     商店获取商品
     URL : /api/items/shop
     method: GET
-    extra : 需要店铺登录凭证
-    args: 无
+    args: (1) shop_id
     return: (1) 成功, status code 200
                 a. current_price, decimal, 商品售价;
                 b. original_price, decimal, 商品原价;
@@ -279,8 +278,8 @@ class ItemShop(SecureShopResource):
             (2) 失败, status code 400
                 a. message, str, 错误信息
     """
-    def get(self, auth_shop):
-        items = Item.query.filter_by(shop_id=auth_shop.id)
+    def get(self, shop_id):
+        items = Item.query.filter_by(shop_id=shop_id)
 
         items_data = []
         for item in items:

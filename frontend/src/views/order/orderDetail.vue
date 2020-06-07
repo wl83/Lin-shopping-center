@@ -4,6 +4,14 @@
       <navbar></navbar>
     </header>
     <div class="order-detail-address-container">
+      <el-steps class="order-datail-steps" :space="200" :active="orderStatus" finish-status="success">
+        <el-step title="已下单"></el-step>
+        <el-step title="已付款"></el-step>
+        <el-step title="配送中"></el-step>
+        <el-step title="已送达"></el-step>
+        <el-step title="已签收"></el-step>
+      </el-steps>
+    </div>
       <div class="order-detail-address-info-container">
         <div class="order-detail-address-name-container">
           <span>{{ address.name }}</span>
@@ -15,8 +23,6 @@
           <span>{{ address.address }}</span>
         </div>
       </div>
-    </div>
-
     <orderitemgrid :orderList="orderItems"></orderitemgrid>
   </div>
 </template>
@@ -33,6 +39,7 @@ export default {
     return {
       orderId: '',
       address: {},
+      orderStatus: '',
       orderItems: []
     }
   },
@@ -54,6 +61,7 @@ export default {
       }
     }).then(response => {
       const items = response.data.items
+      this.orderStatus = response.data.status + 1
 
       items.forEach(item => {
         const orderItem = {}
@@ -110,14 +118,14 @@ export default {
   border: 1px solid rgb(143, 143, 143);
 }
 .order-detail-address-info-container{
-  width: 50%;
-  height: 100%;
-  left: 50%;
-  transform: translate(-50%);
-  position: relative;
-  border: 1px solid rgb(155, 155, 155);
-  border-top: 0px;
-  border-bottom: 0px;
+  width: 200px;
+  height: 115px;
+  /* transform: translate(-50%); */
+  position: absolute;
+  left: 3%;
+  top: 8%;
+  /* border: 1px solid rgb(187, 187, 187); */
+  padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -155,5 +163,12 @@ export default {
   right: 0;
   position: fixed;
   border: 1px solid;
+}
+.order-datail-steps{
+  left: 53%;
+  top: 18%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  width: 700px;
 }
 </style>

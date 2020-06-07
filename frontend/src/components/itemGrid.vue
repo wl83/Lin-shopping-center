@@ -13,12 +13,13 @@
           @click="onItemClicked(item)"></el-image>
       </div>
       <div class="item-price">
-        <el-link type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
+        <el-link @click="inShopClicked(item)" type="info" icon="el-icon-s-goods" class="shop-link">进入店铺</el-link>
+        <!-- <el-button @click="inShopClicked(item)" type="text" icon="el-icon-s-goods" class="shop-link">进入店铺</el-button> -->
         <p><span class="price">¥ {{ item.current_price }}</span></p>
         <p><span class="stock">销量: {{ item.sales }}</span></p>
       </div>
       <div class="in-cart">
-        <el-button @click="onInCartClicked(item)" type="primary" class="in-cart-btn">加入购物车</el-button>
+        <el-button href="onInCartClicked(item)" type="primary" class="in-cart-btn">加入购物车</el-button>
       </div>
     </el-card>
   </div>
@@ -35,6 +36,9 @@ export default {
     }
   },
   methods: {
+    inShopClicked (item) {
+      this.$router.push({ name: 'shopIndex', params: { shopId: item.shop_id } })
+    },
     onItemClicked (item) {
       this.$router.push({ name: 'item', params: { itemId: item.item_id } })
     },
@@ -52,6 +56,7 @@ export default {
         if (err.response.status === 401) {
           this.$router.replace({ name: 'customerLogin' })
         } else {
+          console.log(err.response.data.message)
           this.$message.error('商品已加入购物车')
         }
       })
@@ -93,6 +98,7 @@ export default {
     width: 350px;
     height: 100px;
     top: 12%;
+    /* border: 1px solid; */
     position: relative;
   }
   .item-price .price{
@@ -103,7 +109,7 @@ export default {
   }
   .shop-link{
     float: left;
-    width: 110px;
+    width: 100px;
     top: 30%;
     position: relative;
     /* transform: translate(-50%); */
@@ -126,7 +132,7 @@ export default {
     text-align: center;
     width: 110px;
     position: relative;
-    left: 50%;
+    left: 46%;
     transform: translate(-50%);
   }
 </style>

@@ -124,8 +124,8 @@ class OrderShopQuery(SecureShopResource):
             (3) 权限不足，status code 401
     """
     def get(self, auth_shop):
-        args = order_get_parser.parse_args()
-        group = args.group_index or 0
+        # args = order_get_parser.parse_args()
+        # group = args.group_index or 0
 
         shop_item_ids = select([Item.id]).where(Item.shop_id == auth_shop.id).alias()
         order_ids = select([OrderItem.order_id]).where(OrderItem.item_id == shop_item_ids).alias()

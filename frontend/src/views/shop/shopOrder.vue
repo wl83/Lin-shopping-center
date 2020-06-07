@@ -41,14 +41,14 @@
           filter-placement="bottom-end">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.status === ('待付款' || '异常') ? 'danger' : scope.row.tag === ('已付款' || '配送中' || '已送达') ? 'primary' : 'success' "
+              :type="scope.row.status === ('待付款' || '异常') ? 'danger' : scope.row.status === ('已付款' || '配送中' || '已送达') ? 'primary' : 'success' "
               disable-transitions>{{ scope.row.status }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           prop="address"
           label="地址"
-          width="300">
+          width="330">
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -56,15 +56,40 @@
           width="120">
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="deleteRow(scope.$index, orderList)"
+              @click.native.prevent="handleOrderStatus(scope.$index)"
               type="text"
               size="small">
-              移除
+              处理
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+
+    <el-dialog
+      title="更新订单状态"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          {{ orderStatus[orderStat] }}
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="a">待付款</el-dropdown-item>
+          <el-dropdown-item command="b">已付款</el-dropdown-item>
+          <el-dropdown-item command="c">配送中</el-dropdown-item>
+          <el-dropdown-item command="d">已送达</el-dropdown-item>
+          <el-dropdown-item command="e">异常</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateOrderStatus">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -79,7 +104,10 @@ export default {
   data () {
     return {
       orderList: [],
+      dialogVisible: false,
       orderIds: '',
+      orderStat: '',
+      orderClicked: '',
       orderStatus: ['待付款', '已付款', '配送中', '已送达', '已签收', '异常'],
       filters: [
         { text: '待付款', value: '待付款' },
@@ -92,8 +120,61 @@ export default {
     }
   },
   methods: {
-    deleteRow (index, rows) {
-      rows.splice(index, 1)
+    updateOrderStatus () {
+      this.$confirm('确定更新订单状态?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.put('shop/orders/' + this.orderClicked, {
+          status: this.orderStat
+        },
+        {
+          headers: {
+            Authorization: window.sessionStorage.getItem('shoptoken')
+          }
+        }).then(() => {
+          this.$message.success('更新成功')
+          this.dialogVisible = false
+        }).catch(err => {
+          console.log(err)
+        })
+      })
+    },
+    handleOrderStatus (index) {
+      this.dialogVisible = true
+      this.orderClicked = this.orderList[index].orderId
+    },
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    },
+    handleCommand (command) {
+      switch (command) {
+        case 'a': {
+          this.orderStat = 0
+          break
+        }
+        case 'b': {
+          this.orderStat = 1
+          break
+        }
+        case 'c': {
+          this.orderStat = 2
+          break
+        }
+        case 'd': {
+          this.orderStat = 3
+          break
+        }
+        case 'e': {
+          this.orderStat = 5
+          break
+        }
+      }
     },
     filterTag (value, row) {
       return row.tag === value
@@ -119,6 +200,7 @@ export default {
             Authorization: window.sessionStorage.getItem('shoptoken')
           }
         }).then(response => {
+          order.orderId = orderId
           order.createdTime = response.data.created_time
           order.paymentAmount = response.data.payment_amount
           order.name = response.data.address.receiver

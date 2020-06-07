@@ -3,18 +3,18 @@
     <navbar :routerData="transmitData" @childFn="parentFn"></navbar>
 
     <div class="home-grid">
-      <div class="left-arrow">
+      <!-- <div class="left-arrow">
         <el-button @click="onPrevChangeClicked" class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
-      </div>
+      </div> -->
       <div class="scroll-pict">
         <itemgrid :items="items"></itemgrid>
       </div>
-      <div class="page-container">
+      <!-- <div class="page-container">
         <p class="currentPage">{{ this.groupIndex+1 }}</p>
-      </div>
-      <div class="right-arrow">
+      </div> -->
+      <!-- <div class="right-arrow">
         <el-button @click="onNextChangeClicked" class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
       itemName: '',
       items: [],
       groupIndex: 0,
-      rankType: 5,
+      rankType: '',
       transmitData: {
         searchFn: this.search,
         rankTypeN: this.rankType,
@@ -42,7 +42,8 @@ export default {
   },
   methods: {
     parentFn (childData) {
-      this.items = childData
+      this.items = childData.items
+      this.rankType = childData.rank
     },
     onPrevChangeClicked () {
       if (this.groupIndex === 0) {
@@ -102,6 +103,7 @@ export default {
   },
   mounted: function () {
     this.itemName = this.$route.query.itemName
+    this.rankType = this.$route.query.rank
     this.onSearch()
   }
 }

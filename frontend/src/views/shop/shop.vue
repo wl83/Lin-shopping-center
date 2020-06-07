@@ -14,10 +14,11 @@
           <span>{{ name }}</span>
         </div>
         <div class="shop-info-wrapper">
-          <span>商店简介: {{ info }}</span>
+          <span>{{ info }}</span>
         </div>
         <div class="shop-address-container">
-          <span>商店地址: {{ address }}</span>
+          <i class="el-icon-location-outline"></i>
+          <span>{{ address }}</span>
         </div>
         <div class="shop-phone-container">
           <span>联系电话: {{ phone }}</span>
@@ -116,6 +117,8 @@ export default {
     }
   },
   mounted: function () {
+    this.shopId = ''
+
     this.$http.get('shop', {
       headers: {
         Authorization: window.sessionStorage.getItem('shoptoken')
@@ -126,29 +129,28 @@ export default {
       this.phone = response.data.phone
       this.address = response.data.address
       this.info = response.data.info
-    }).catch(err => {
-      console.log(err)
     })
-
-    this.$http.get('items/shop', {
-      headers: {
-        Authorization: window.sessionStorage.getItem('shoptoken')
-      }
-    }).then(response => {
-      this.items = response.data.items
-      this.items.forEach(item => {
-        const itemId = item.item_id
-        this.$http.get('review/shop', {
-          params: { item_id: itemId }
-        }).then(response => {
-          this.reviewNum += response.data.review_ids.length
-        }).catch(err => {
-          console.log(err)
-        })
+      .then(() => {
+        this.$http.get('items/shop/' + this.shopId, {})
+          .then(response => {
+            this.items = response.data.items
+            this.items.forEach(item => {
+              const itemId = item.item_id
+              this.$http.get('review/shop', {
+                params: { item_id: itemId }
+              }).then(response => {
+                this.reviewNum += response.data.review_ids.length
+              }).catch(err => {
+                console.log(err)
+              })
+            })
+          }).catch(err => {
+            console.log(err)
+          })
       })
-    }).catch(err => {
-      console.log(err)
-    })
+      .catch(err => {
+        console.log(err)
+      })
 
     this.$http.get('shop/orders', {
       headers: {

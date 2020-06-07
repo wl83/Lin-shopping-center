@@ -81,17 +81,19 @@ export default {
                   reviewTemp.remark = response.data.remark
                   reviewTemp.createdTime = response.data.created_time
                   reviewTemp.itemName = item.name
-
                   reviewTemp.customerId = response.data.customer_id
-                  this.$http.get('customer/' + response.data.customer_id, {})
+                })
+                .then(() => {
+                  this.$http.get('customer/' + reviewTemp.customerId, {})
                     .then(response => {
                       reviewTemp.name = response.data.nickname
                       reviewTemp.phone = response.data.phone
+                      this.reviewList.push(reviewTemp)
                     }).catch(err => {
                       console.log(err)
                     })
-                  this.reviewList.push(reviewTemp)
-                }).catch(err => {
+                })
+                .catch(err => {
                   console.log(err)
                 })
             })

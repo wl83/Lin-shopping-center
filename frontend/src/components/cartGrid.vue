@@ -102,7 +102,7 @@ export default {
 .cart-item-grid{
   width: 50%;
   height: 200px;
-  border: 1px solid rgb(163, 163, 163);
+  border: 1px solid rgb(180, 180, 180);
   position: relative;
   left: 50%;
   transform: translate(-50%);

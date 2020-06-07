@@ -25,6 +25,7 @@
         <el-divider class="divider"></el-divider>
         <div class="order-more-container">
           <el-button @click="onDetailclicked(order)" class="order-more" type="primary" plain>查看详情</el-button>
+          <el-button v-if="order.status != 4" @click="onConfirmClicked(order)" class="order-more" type="success" plain>确认收货</el-button>
         </div>
       </div>
   </div>
@@ -33,6 +34,10 @@
 <script>
 export default {
   props: ['orderList'],
+  data () {
+    return {
+    }
+  },
   methods: {
     onDetailclicked (order) {
       this.$router.push({
@@ -40,6 +45,29 @@ export default {
         params: {
           orderId: order.orderId
         }
+      })
+    },
+    onConfirmClicked (order) {
+      this.$confirm('此操作将确认收货，再未收到货物之前请勿确认，是否继续?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.put('customer/orders/' + order.orderId, {
+          status: 4
+        },
+        {
+          headers: {
+            Authorization: window.sessionStorage.getItem('token')
+          }
+        }).then(() => {
+          this.$message.success('确认收货成功')
+        }).catch(err => {
+          console.log(err)
+        })
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('确认收货失败')
       })
     },
     getStatusText (status) {
@@ -52,7 +80,7 @@ export default {
         case 2:
           return '配送中'
         case 3:
-          return '已到达'
+          return '已送达'
         case 4:
           return '已收货'
         case 5:
@@ -110,6 +138,7 @@ export default {
     top: 5%;
     transform: translate(-50%);
     position: relative;
+    margin-right: 200px;
   }
   .order-price-container{
     width: 100%;

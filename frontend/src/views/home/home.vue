@@ -5,22 +5,24 @@
     </header>
 
     <div class="home-grid">
-      <div class="left-arrow">
+      <!-- <div class="left-arrow">
         <el-button @click="onPreClicked" class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
-      </div>
+      </div> -->
       <div class="scroll-pict">
         <itemgrid :items="items"></itemgrid>
       </div>
-      <div class="right-arrow">
+      <!-- <div class="right-arrow">
         <el-button @click="onNextClicked" class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
-      </div>
+      </div> -->
     </div>
+    <div style="height: 100px;"></div>
   </div>
 </template>
 
 <script>
 import navbar from '../../components/navBar.vue'
 import itemgrid from '../../components/itemGrid.vue'
+import axios from 'axios'
 export default {
   components: {
     navbar,
@@ -29,55 +31,67 @@ export default {
   data () {
     return {
       items: [],
+      itemsDisplay: [{}, {}, {}],
       groupIndex: 0
     }
   },
   methods: {
-    onPreClicked () {
-      if (this.groupIndex === 0) {
-        this.$message.warning('不能往前了～')
-        return
-      }
-      this.groupIndex--
-      this.getItems(this.groupIndex)
-    },
-    onNextClicked () {
-      this.groupIndex++
-      this.getItems(this.groupIndex)
-    },
+    // onPreClicked () {
+    //   if (this.groupIndex === 0) {
+    //     return this.$message.warning('不能往前了～')
+    //   }
+    //   this.groupIndex -= 3
+    //   this.getItems(this.groupIndex)
+    // },
+    // onNextClicked () {
+    //   this.groupIndex += 3
+    //   if (this.groupIndex >= this.items.length) {
+    //     return this.$message.warning('不能往后了～')
+    //   }
+    //   this.getItems(this.groupIndex)
+    // },
     getItems (groupIndex) {
-      this.items = []
-      this.$http.get('item/search', {
-        params: {
-          group_index: groupIndex
-        }
-      }).then(response => {
-        const itemIds = response.data.item_ids
-
-        itemIds.forEach(id => {
-          this.$http.get('items/' + id, {}).then(response => {
-            const item = {}
-            item.name = response.data.name
-            item.current_price = response.data.current_price
-            item.original_price = response.data.original_price
-            item.in_stock = response.data.in_stock
-            item.info = response.data.info
-            item.sales = response.data.sales
-            item.shop_id = response.data.shop_id
-            item.images = response.data.images
-            item.item_id = id
-            this.items.push(item)
-          }).catch(err => {
-            console.error(err)
-          })
-        })
-      }).catch(err => {
-        console.log(err)
-      })
+      this.itemsDisplay = []
+      this.itemsDisplay = this.items.splice(groupIndex, groupIndex + 3)
+    },
+    resolve (response, id) {
+      const item = {}
+      item.name = response.data.name
+      item.current_price = response.data.current_price
+      item.original_price = response.data.original_price
+      item.in_stock = response.data.in_stock
+      item.info = response.data.info
+      item.sales = response.data.sales
+      item.shop_id = response.data.shop_id
+      item.images = response.data.images
+      item.item_id = id
+      this.items.push(item)
+    },
+    reject (err) {
+      console.log(err)
     }
   },
-  mounted: function () {
-    this.getItems(this.groupIndex)
+  mounted () {
+    axios.get('item/search', {})
+      .then(response => {
+        const itemIds = response.data.item_ids
+        for (var i = 0; i < response.data.item_ids.length; i++) {
+          this.items.push({})
+        }
+
+        itemIds.forEach(itemId => {
+          this.$http.get('items/' + itemId, {})
+            .then(response => {
+              this.resolve(response, itemId)
+            })
+            .catch(err => {
+              this.reject(err)
+            })
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>

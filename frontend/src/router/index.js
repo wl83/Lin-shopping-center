@@ -23,6 +23,7 @@ import ShopItem from '../views/shop/shopItem.vue'
 import AddItem from '../views/item/addItem.vue'
 import ShopReview from '../views/shop/shopReview.vue'
 import ShopReport from '../views/shop/shopReport.vue'
+import ShopIndex from '../views/shop/shopIndex.vue'
 
 Vue.use(VueRouter)
 
@@ -141,6 +142,11 @@ const routes = [
     path: '/shop/report',
     name: 'shopReport',
     component: ShopReport
+  },
+  {
+    path: '/shop/index',
+    name: 'shopIndex',
+    component: ShopIndex
   }
 ]
 

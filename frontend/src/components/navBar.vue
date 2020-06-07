@@ -7,6 +7,37 @@
     <div class="search-query">
       <el-input @keydown.enter.native="handleSearch" placeholder="请输入内容" class="search-query-input" v-model="searchQuery.text" clearable prefix-icon="el-icon-search"></el-input>
       <el-button @click="handleSearch" class="search-btn" slot="append" icon="el-icon-search"></el-button>
+      <el-dropdown class="rank-brn" @command="handleCommand">
+        <el-button>
+          <i class="el-icon-setting"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="a">
+            <i class="el-icon-check" v-if="rank==1"></i>
+            按价格从大到小
+          </el-dropdown-item>
+          <el-dropdown-item command="b">
+            <i class="el-icon-check" v-if="rank==2"></i>
+            按价格从小到大
+          </el-dropdown-item>
+          <el-dropdown-item command="c">
+            <i class="el-icon-check" v-if="rank==3"></i>
+            按评价从大到小
+          </el-dropdown-item>
+          <el-dropdown-item command="d">
+            <i class="el-icon-check" v-if="rank==4"></i>
+            按评价从小到大
+          </el-dropdown-item>
+          <el-dropdown-item command="e">
+            <i class="el-icon-check" v-if="rank==5"></i>
+            按销量从大到小
+          </el-dropdown-item>
+          <el-dropdown-item command="f">
+            <i class="el-icon-check" v-if="rank==6"></i>
+            按销量从小到大
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="nav-menu">
       <el-menu class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -34,10 +65,39 @@ export default {
       searchQuery: {
         text: ''
       },
-      items: []
+      items: [],
+      rank: 5
     }
   },
   methods: {
+    handleCommand (command) {
+      switch (command) {
+        case 'a': {
+          this.rank = 1
+          break
+        }
+        case 'b': {
+          this.rank = 2
+          break
+        }
+        case 'c': {
+          this.rank = 3
+          break
+        }
+        case 'd': {
+          this.rank = 4
+          break
+        }
+        case 'e': {
+          this.rank = 5
+          break
+        }
+        case 'f': {
+          this.rank = 6
+          break
+        }
+      }
+    },
     handleSelect (index) {
       const tokenStr1 = window.sessionStorage.getItem('token')
       const tokenStr2 = window.sessionStorage.getItem('shoptoken')
@@ -64,19 +124,19 @@ export default {
           } else {
             this.$router.replace('/customer')
           }
-
           break
         }
       }
     },
     handleSearch () {
-      if (this.$route.path === '/search') {
-        this.$parent.search(this.searchQuery.text, this.rankTypeN, this.groupIndexN)
-        this.$emit('childFn', this.items)
+      if (this.$route.path.substr(0, 7) === '/search') {
+        this.items = []
+        this.$parent.search(this.searchQuery.text, this.rank, this.groupIndexN)
+        this.$emit('childFn', { items: this.items, rank: this.rank })
+        this.$route.query = { itemName: this.searchQuery.text }
       } else {
-        this.$router.replace({ path: '/search', query: { itemName: this.searchQuery.text } })
+        this.$router.push({ name: 'search', query: { itemName: this.searchQuery.text, rank: this.rank } })
       }
-      // this.$router.go(0)
     }
   }
 }
@@ -99,6 +159,7 @@ header{
     height: 60px;
     float: left;
     padding-top: 10px;
+    /* border: 1px solid; */
   }
   .nav-menu{
     width: 300px;
@@ -115,10 +176,13 @@ header{
   }
   .search-query-input{
     width: 300px;
-    margin-left: 250px;
+    margin-left: 220px;
     float: left;
   }
   .search-btn{
+    float: left;
+  }
+  .rank-brn{
     float: left;
   }
 </style>
