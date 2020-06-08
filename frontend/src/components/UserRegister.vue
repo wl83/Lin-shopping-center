@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item class="form-item" label="头像">
             <div>
-              <el-upload
+              <!-- <el-upload
                 class="avatar-uploader"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 v-loading="progressDisplay"
@@ -46,6 +46,20 @@
                 :on-progress="beforeAvatarprogress">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload> -->
+              <el-upload
+                class="upload-demo"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                multiple
+                :limit="1"
+                :on-change="handleChange"
+                :on-exceed="handleExceed"
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
               </el-upload>
             </div>
             <div>
@@ -86,6 +100,8 @@ export default {
     }
     return {
       labelPosition: 'right',
+      fileList: [],
+      image: [],
       customerRegisterForm: {
         phone: '',
         password: '',
@@ -106,9 +122,6 @@ export default {
           { required: true, message: '请再次输入密码', trigger: 'blur' },
           { validator: validatePass2, trigger: 'blur' }
         ],
-        // gender: [
-        //   { required: true, message: '请选择性别', trigger: 'blur', type: 'number' }
-        // ],
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ]
@@ -129,16 +142,41 @@ export default {
     navbar
   },
   methods: {
-    purify_images () {
-      return this.imageUrl.replace(/data:image\/[^;]+;base64,/i, '')
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    getBase64 (file) {
+      return new Promise(function (resolve, reject) {
+        const reader = new FileReader()
+        let imgResult = ''
+        reader.readAsDataURL(file)
+        reader.onload = function () {
+          imgResult = reader.result
+        }
+        reader.onerror = function (error) {
+          reject(error)
+        }
+        reader.onloadend = function () {
+          resolve(imgResult)
+        }
+      })
+    },
+    handleChange (file, _fileList) {
+      this.getBase64(file.raw).then(res => {
+        this.image.push(res.replace(/data:image\/[^;]+;base64,/i, ''))
+      })
     },
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
-      // if (this.image === '') {
-      //   console.log(this.imageUrl)
-      // } else {
-      //   console.log(this.imageUrl)
-      // }
     },
     beforeAvatarUpload (file) {
       const pict = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/pdf', 'image/JPG', 'image/JPEG', 'image/PBG', 'image/GIF', 'image/BMP', 'image/PDF']
@@ -149,13 +187,13 @@ export default {
           break
         }
       }
-      const isLt10M = file.size / 1024 / 1024 < 10
+      const isLt10M = file.size / 1024 / 1024 < 0.5
 
       if (!isPict) {
         this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!')
       }
       if (!isLt10M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传头像图片大小不能超过 500KB!')
       }
 
       return isPict && isLt10M
@@ -170,11 +208,6 @@ export default {
       }
     },
     customerRegister () {
-      // if (!this.customerRegisterForm.genderValue) {
-      //   console.log('...')
-      // } else {
-      //   console.log(this.customerRegisterForm.genderValue)
-      // }
       this.$refs.customerRegisterFormRef.validate(async valid => {
         if (!valid) {
           return
@@ -182,17 +215,12 @@ export default {
         if (!this.isMobileNumber(this.customerRegisterForm.phone)) {
           return this.$message.error('手机号格式错误!')
         }
-        // if (!this.customerRegisterForm.genderValue) {
-        //   console.log('null')
-        // } else {
-        //   console.log(this.customerRegisterForm.genderValue)
-        // }
         await this.$http.post('customer/register', {
           phone: this.customerRegisterForm.phone,
           password: this.customerRegisterForm.password,
           nickname: this.customerRegisterForm.name,
           gender: this.customerRegisterForm.genderValue,
-          image: this.purify_images()
+          image: this.image
         }).then(() => {
           this.$message.success('注册成功！')
           this.$router.push('customer/login')
@@ -224,7 +252,7 @@ export default {
 <style lang="less" scoped>
   .register-grid{
     width: 50%;
-    height: 700px;
+    height: 750px;
     position: absolute;
     left: 50%;
     top: 20%;

@@ -19,7 +19,7 @@
         <p><span class="stock">销量: {{ item.sales }}</span></p>
       </div>
       <div class="in-cart">
-        <el-button href="onInCartClicked(item)" type="primary" class="in-cart-btn">加入购物车</el-button>
+        <el-button @click="onInCartClicked(item)" type="primary" class="in-cart-btn">加入购物车</el-button>
       </div>
     </el-card>
   </div>

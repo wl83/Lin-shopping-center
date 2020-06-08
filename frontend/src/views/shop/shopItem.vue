@@ -4,7 +4,7 @@
       <navbar></navbar>
     </header>
     <div class="shop-aside-name-container">
-      <shopaside class="shop-aside-container"></shopaside>
+      <shopaside :shopId="shopId" class="shop-aside-container"></shopaside>
     </div>
     <div class="shop-item-add-container">
       <div class="shop-item-add-btn-container">
@@ -117,10 +117,8 @@ export default {
     }
   },
   mounted: function () {
-    this.$http.get('items/shop', {
-      headers: {
-        Authorization: window.sessionStorage.getItem('shoptoken')
-      }
+    this.shopId = this.$route.params.shopId
+    this.$http.get('items/shop/' + this.shopId, {
     }).then(response => {
       response.data.items.forEach(item => {
         const itemTemp = {}
@@ -142,10 +140,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .shop-item-wrapper{
+    width: 100%;
+    height: 700px auto;
+  }
   .shop-item-table-container{
     height: 100%;
     width: 84%;
-    position: fixed;
+    position: absolute;
     right: 0;
   }
   .shop-item-add-container{

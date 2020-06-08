@@ -15,7 +15,8 @@ class Config(object):
     SECRET_KEY = os.getenv('SECRET_KEY', 'secret')
 
     APP_DIR = os.path.dirname(os.path.dirname(__file__))
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(APP_DIR, os.getenv('DATABASE_URI'))
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(APP_DIR, os.getenv('DATABASE_URI'))
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:HHxxhust568@127.0.0.1/shop"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # 获取根级目录

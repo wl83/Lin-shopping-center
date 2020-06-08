@@ -41,7 +41,7 @@ class Customer(db.Model):
     name = db.Column(db.String(30), nullable=False)
     gender = db.Column(db.Enum(Gender), nullable=False)
     created_time = db.Column(db.Date, default=datetime.utcnow)
-    image = db.Column(db.LargeBinary)
+    image = db.Column(db.LargeBinary(65536))
 
     addresses = db.relationship('Address', backref='customer')
     orders = db.relationship('Order', backref='customer')
@@ -167,7 +167,9 @@ class ItemImage(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
-    image = db.Column(db.LargeBinary, nullable=False)
+    image = db.Column(db.LargeBinary(65536), nullable=False)
 
     def __repr__(self):
         return '<ItemImage item_id:{}, id:{}>'.format(self.item_id, self.id)
+
+db.create_all()

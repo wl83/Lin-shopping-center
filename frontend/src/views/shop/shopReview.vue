@@ -64,10 +64,7 @@ export default {
   },
   methods: {
     getReviewInfo () {
-      this.$http.get('items/shop', {
-        headers: {
-          Authorization: window.sessionStorage.getItem('shoptoken')
-        }
+      this.$http.get('items/shop/' + this.shopId, {
       }).then(response => {
         response.data.items.forEach(item => {
           this.$http.get('review/shop', {

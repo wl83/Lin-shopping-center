@@ -36,20 +36,6 @@ export default {
     }
   },
   methods: {
-    // onPreClicked () {
-    //   if (this.groupIndex === 0) {
-    //     return this.$message.warning('不能往前了～')
-    //   }
-    //   this.groupIndex -= 3
-    //   this.getItems(this.groupIndex)
-    // },
-    // onNextClicked () {
-    //   this.groupIndex += 3
-    //   if (this.groupIndex >= this.items.length) {
-    //     return this.$message.warning('不能往后了～')
-    //   }
-    //   this.getItems(this.groupIndex)
-    // },
     getItems (groupIndex) {
       this.itemsDisplay = []
       this.itemsDisplay = this.items.splice(groupIndex, groupIndex + 3)

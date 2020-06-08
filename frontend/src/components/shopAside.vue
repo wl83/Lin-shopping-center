@@ -64,7 +64,7 @@ export default {
           break
         }
         case '3': {
-          this.$router.push({ name: 'shopOrders' })
+          this.$router.push({ name: 'shopOrders', params: { shopId: this.shopId } })
           break
         }
         case '4': {

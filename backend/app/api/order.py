@@ -124,19 +124,26 @@ class OrderShopQuery(SecureShopResource):
             (3) 权限不足，status code 401
     """
     def get(self, auth_shop):
-        # args = order_get_parser.parse_args()
-        # group = args.group_index or 0
+        shop_items = Item.query.filter_by(shop_id=auth_shop.id).all()
+        order_ids = []
+        order_datas = []
+        for shop_item in shop_items:
+            order_items = OrderItem.query.filter_by(item_id=shop_item.id).all()
+            for order_item in order_items:
+                if order_item.order_id not in order_ids:
+                    order_ids.append(order_item.order_id)
+                    order_data = {}
+                    order_data['items'] = []
+                    order_data['items'].append({ 'item_id': order_item.item_id, 'amount': order_item.amount })
+                    order_data['order_id'] = order_item.order_id
+                    order_data['price'] = str(round(order_item.amount * order_item.price_paid, 2))
+                    order_datas.append(order_data)
+                else:
+                    index = order_ids.index(order_item.order_id)
+                    order_datas[index]['price'] = str(round(float(order_datas[index]['price']) + float(order_item.amount * order_item.price_paid), 2))
+                    order_datas[index]['items'].append({ 'item_id': order_item.item_id, 'amount': order_item.amount })
 
-        shop_item_ids = select([Item.id]).where(Item.shop_id == auth_shop.id).alias()
-        order_ids = select([OrderItem.order_id]).where(OrderItem.item_id == shop_item_ids).alias()
-        orders = Order.query.filter(Order.id == order_ids.c.order_id).order_by(Order.id.desc())
-
-        # ordersPage = orders.paginate(page=1 + group, per_page=GROUP_COUNT)
-        output = []
-        for order in orders:
-            output.append(order.id)
-
-        return {'orders': output}, 200
+        return {'orders': order_datas}, 200
 
 
 @api.route('/shop/orders/<int:order_id>')

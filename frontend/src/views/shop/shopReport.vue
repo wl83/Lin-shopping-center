@@ -4,7 +4,7 @@
       <navbar></navbar>
     </header>
     <div class="shop-aside-name-container">
-      <shopaside class="shop-aside-container"></shopaside>
+      <shopaside :shopId="shopId" class="shop-aside-container"></shopaside>
     </div>
     <el-card class="box-card">
       <div id="main" style="width: 750px;height:400px;"></div>
@@ -26,7 +26,8 @@ export default {
       paymentList: [],
       time: [],
       dateList: [],
-      day30: [4, 6, 9, 11]
+      day30: [4, 6, 9, 11],
+      shopId: ''
     }
   },
   methods: {
@@ -78,6 +79,7 @@ export default {
     }
   },
   mounted () {
+    this.shopId = this.$route.params.shopId
     var date = new Date()
     date = date.toLocaleDateString()
     for (var i = 0; i < 7; i++) {

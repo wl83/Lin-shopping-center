@@ -4,7 +4,7 @@
       <navbar></navbar>
     </header>
     <div class="shop-aside-name-container">
-      <shopaside class="shop-aside-container"></shopaside>
+      <shopaside :shopId="shopId" class="shop-aside-container"></shopaside>
     </div>
 
     <div class="register-grid">

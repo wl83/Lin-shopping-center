@@ -4,7 +4,7 @@
       <navbar></navbar>
     </header>
     <div class="shop-aside-name-container">
-      <shopaside class="shop-aside-container"></shopaside>
+      <shopaside :shopId="shopId" class="shop-aside-container"></shopaside>
     </div>
     <div class="shop-order-table-container">
       <el-table
@@ -61,6 +61,12 @@
               size="small">
               处理
             </el-button>
+            <el-button
+              @click.native.prevent="handleOrderDetail(scope.$index)"
+              type="text"
+              size="small">
+              查看
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,6 +96,16 @@
       </span>
     </el-dialog>
 
+    <el-dialog title="收货地址" :visible.sync="dialogTableVisible1">
+      <el-table :data="orderDetailTable">
+        <el-table-column property="name" label="商品名" width="150"></el-table-column>
+        <el-table-column property="itemId" label="商品ID" width="100"></el-table-column>
+        <el-table-column property="currentPrice" label="现价" width="150"></el-table-column>
+        <el-table-column property="amount" label="数量" width="100"></el-table-column>
+        <el-table-column property="inStock" label="库存"></el-table-column>
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -105,9 +121,13 @@ export default {
     return {
       orderList: [],
       dialogVisible: false,
-      orderIds: '',
+      dialogTableVisible1: false,
+      orders: [],
+      orderDetailTable: [],
       orderStat: '',
       orderClicked: '',
+      shopId: '',
+      itemIds: [],
       orderStatus: ['待付款', '已付款', '配送中', '已送达', '已签收', '异常'],
       filters: [
         { text: '待付款', value: '待付款' },
@@ -144,6 +164,27 @@ export default {
     handleOrderStatus (index) {
       this.dialogVisible = true
       this.orderClicked = this.orderList[index].orderId
+    },
+    handleOrderDetail (index) {
+      this.orderDetailTable = []
+      this.items = this.orderList[index].items
+      this.items.forEach(item => {
+        this.$http.get('items/' + item.item_id, {})
+          .then(response => {
+            const orderItemTemp = {}
+            orderItemTemp.name = response.data.name
+            orderItemTemp.itemId = item.item_id
+            orderItemTemp.currentPrice = response.data.current_price
+            orderItemTemp.inStock = response.data.in_stock
+            orderItemTemp.amount = item.amount
+
+            this.orderDetailTable.push(orderItemTemp)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+      this.dialogTableVisible1 = true
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -185,30 +226,33 @@ export default {
     }
   },
   mounted: function () {
+    this.shopId = this.$route.params.shopId
+
     this.$http.get('shop/orders', {
       headers: {
         Authorization: window.sessionStorage.getItem('shoptoken')
       }
     }).then(response => {
-      this.orderIds = response.data.orders
+      this.orders = response.data.orders
 
-      this.orderIds.forEach(orderId => {
-        const order = {}
+      this.orders.forEach(order => {
+        const orderTemp = {}
 
-        this.$http.get('shop/orders/' + orderId, {
+        this.$http.get('shop/orders/' + order.order_id, {
           headers: {
             Authorization: window.sessionStorage.getItem('shoptoken')
           }
         }).then(response => {
-          order.orderId = orderId
-          order.createdTime = response.data.created_time
-          order.paymentAmount = response.data.payment_amount
-          order.name = response.data.address.receiver
-          order.phone = response.data.address.phone
-          order.address = response.data.address.address
-          order.status = this.orderStatus[response.data.status]
+          orderTemp.orderId = order.order_id
+          orderTemp.createdTime = response.data.created_time
+          orderTemp.paymentAmount = order.price
+          orderTemp.name = response.data.address.receiver
+          orderTemp.phone = response.data.address.phone
+          orderTemp.address = response.data.address.address
+          orderTemp.status = this.orderStatus[response.data.status]
+          orderTemp.items = order.items
 
-          this.orderList.push(order)
+          this.orderList.push(orderTemp)
         })
       })
     })

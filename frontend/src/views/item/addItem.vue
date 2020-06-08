@@ -159,13 +159,13 @@ export default {
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/jpg'
-      const isLt2M = file.size / 1024 / 1024 < 0.5
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
         this.$message.error('上传图片只能是 JPG/PNG 格式!')
       }
       if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 500KB!')
+        this.$message.error('上传图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
     },
@@ -193,7 +193,7 @@ export default {
             }
           }).then(() => {
             this.$message('添加成功')
-            this.$router.push('/shop/items')
+            this.$router.push('/shop')
           }).catch(err => {
             console.log(err)
           })
