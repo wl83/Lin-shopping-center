@@ -8,9 +8,9 @@
     </div>
     <div class="shop-order-table-container">
       <el-table
+        class="shop-order-table"
         :data="orderList"
-        style="width: 100%"
-        max-height="250">
+        style="width: 100%">
         <el-table-column
           fixed
           prop="createdTime"
@@ -261,10 +261,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .shop-order-wrapper{
+    width: 100%;
+    height: 700px;
+  }
   .shop-order-table-container{
     height: 100%;
     width: 84%;
-    position: fixed;
+    position: absolute;
     right: 0;
+  }
+  .shop-order-table{
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
 </style>

@@ -3,18 +3,9 @@
     <navbar :routerData="transmitData" @childFn="parentFn"></navbar>
 
     <div class="home-grid">
-      <!-- <div class="left-arrow">
-        <el-button @click="onPrevChangeClicked" class="left-arrow-icon" icon="el-icon-arrow-left"></el-button>
-      </div> -->
       <div class="scroll-pict">
         <itemgrid :items="items"></itemgrid>
       </div>
-      <!-- <div class="page-container">
-        <p class="currentPage">{{ this.groupIndex+1 }}</p>
-      </div> -->
-      <!-- <div class="right-arrow">
-        <el-button @click="onNextChangeClicked" class="right-arrow-icon" icon="el-icon-arrow-right"></el-button>
-      </div> -->
     </div>
   </div>
 </template>
@@ -76,9 +67,10 @@ export default {
         this.itemIds = response.data.item_ids
         this.total = response.data.total
         this.itemIds.forEach(itemId => {
+          const item = { item_id: itemId }
+          this.items.push(item)
           this.$http.get('items/' + itemId, {})
             .then(response => {
-              const item = {}
               item.name = response.data.name
               item.current_price = response.data.current_price
               item.original_price = response.data.original_price
@@ -87,8 +79,8 @@ export default {
               item.sales = response.data.sales
               item.shop_id = response.data.shop_id
               item.images = response.data.images
-              item.item_id = itemId
-              this.items.push(item)
+
+              this.items = this.items.splice(0)
             }).catch(err => {
               console.log(err)
             })

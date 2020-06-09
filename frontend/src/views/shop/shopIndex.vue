@@ -3,6 +3,7 @@
     <header>
       <navbar></navbar>
     </header>
+    <div style="height: 10px;"></div>
     <div class="shop-index-info-container">
       <el-card class="shop-info-box">
         <div class="shop-index-name-container">

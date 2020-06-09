@@ -170,6 +170,13 @@ export default {
       return isJPG && isLt2M
     },
     onAddItemClicked () {
+      for (var i = this.images.length; i >= 0; i -= 2) {
+        if (i > 0) {
+          this.images.pop()
+        }
+      }
+      console.log(this.images.length)
+      alert('!!!')
       this.$refs.addItemFormRef.validate(async valid => {
         if (!valid) {
           return

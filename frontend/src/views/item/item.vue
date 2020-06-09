@@ -5,11 +5,22 @@
     <div class="item-page-wrapper">
       <div class="item-page-info-container">
         <div class="item-page-image-container">
-            <el-image
+            <!-- <el-image
               :src="'data:image;base64,' + this.images[0]"
               class="item-page-image"
               :fit="fit">
-            </el-image>
+            </el-image> -->
+            <div class="block">
+              <el-carousel height="150px" direction="vertical">
+                <el-carousel-item v-for="(image, index) in this.images" :key="index">
+                  <el-image
+                    :src="'data:image;base64,' + image"
+                    class="item-page-image"
+                    :fit="fit">
+                  </el-image>
+                </el-carousel-item>
+              </el-carousel>
+            </div>
         </div>
         <div class="item-page-intro-container">
           <div class="item-page-name-container">
@@ -129,7 +140,7 @@ export default {
         this.shopId = response.data.shop_id
         this.itemClass = response.data.item_class
         this.images = response.data.images
-        this.value = response.data.star_value.toFixed(1) > 5 ? 5 : response.data.star_value.toFixed(1)
+        this.value = response.data.star_value.toFixed(1) >= 5 ? 5 : response.data.star_value.toFixed(1)
       })
       .catch(err => {
         console.error(err)

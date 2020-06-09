@@ -155,11 +155,15 @@ header{
     margin-left: 100px;
   }
   .search-query{
-    width: 650px;
+    width: 420px;
     height: 60px;
     float: left;
     padding-top: 10px;
     /* border: 1px solid; */
+    position: relative;
+    left: 46%;
+    top: 50%;
+    transform: translate(-100%);
   }
   .nav-menu{
     width: 300px;
@@ -176,7 +180,6 @@ header{
   }
   .search-query-input{
     width: 300px;
-    margin-left: 220px;
     float: left;
   }
   .search-btn{

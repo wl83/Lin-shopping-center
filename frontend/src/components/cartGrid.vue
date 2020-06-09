@@ -101,7 +101,7 @@ export default {
 }
 .cart-item-grid{
   width: 50%;
-  height: 200px;
+  height: 210px;
   border: 1px solid rgb(180, 180, 180);
   position: relative;
   left: 50%;
@@ -109,14 +109,16 @@ export default {
   margin-top: 30px;
 }
 .cart-item-other-info-container{
-  width: 88%;
+  width: 92%;
   height: 100%;
   float: left;
+  /* border: 1px solid; */
 }
 .cart-item-checkbox-container{
   width: 5%;
   height: 100%;
   float: left;
+  /* border: 1px solid; */
 }
 .cart-item-checkbox{
   left: 50%;
@@ -130,19 +132,21 @@ export default {
   top: 5%;
   position: relative;
   float: left;
-  margin-right: 20px;
+  margin-right: 10px;
+  /* border: 1px solid; */
 }
 .cart-item-image{
   width: 100%;
   height: 100%;
 }
 .item-info-container{
-  width: 65%;
+  width: 63%;
   height: 180px;
   top: 5%;
   position: relative;
   float: left;
   padding-left: 10px;
+  /* border: 1px solid; */
 }
 .item-name{
   width: 100%;
@@ -160,6 +164,7 @@ export default {
 .item-price-container{
   width: 100%;
   height: 40px;
+  margin-top: 10px;
 }
 .item-price-container span{
   font-size: 25px;

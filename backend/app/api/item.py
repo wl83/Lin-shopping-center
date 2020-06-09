@@ -331,3 +331,18 @@ class ItemQueryTest(Resource):
             items_data.append(item_data)
 
         return {'items': items_data}, 200
+
+
+@api.route('/item/report')
+class ItemReport(SecureShopResource):
+    def get(self, auth_shop):
+        items = Item.query.filter_by(shop_id=auth_shop.id).all()
+
+        items_data = []
+        for item in items:
+            item_data = {}
+            item_data['name'] = item.name
+            item_data['value'] = item.sales
+            items_data.append(item_data)
+
+        return {'items': items_data}

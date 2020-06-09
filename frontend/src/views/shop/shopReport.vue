@@ -9,6 +9,11 @@
     <el-card class="box-card">
       <div id="main" style="width: 750px;height:400px;"></div>
     </el-card>
+    <div style="height: 100px;"></div>
+    <el-card class="box-card">
+      <div id="main1" style="width: 750px;height:400px;"></div>
+    </el-card>
+    <div style="height: 100px;"></div>
   </div>
 </template>
 
@@ -24,6 +29,7 @@ export default {
   data () {
     return {
       paymentList: [],
+      itemSales: [],
       time: [],
       dateList: [],
       day30: [4, 6, 9, 11],
@@ -88,6 +94,7 @@ export default {
     }
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'))
+    var myChart1 = echarts.init(document.getElementById('main1'))
 
     this.$http.get('shop/report', {
       headers: {
@@ -122,6 +129,36 @@ export default {
       myChart.setOption(option)
     }).catch(err => {
       console.log(err)
+    })
+
+    this.$http.get('item/report', {
+      headers: {
+        Authorization: window.sessionStorage.getItem('shoptoken')
+      }
+    }).then(response => {
+      this.itemSales = response.data.items
+      console.log(this.itemSales)
+      for (var i = 0; i < this.itemSales.length; i++) {
+        if (this.itemSales[i].value === 0) {
+          this.itemSales.splice(i, 1)
+        }
+      }
+    }).then(() => {
+      var option = {
+        title: {
+          text: '各商品销售统计'
+        },
+        tooltip: {},
+        legend: {
+          data: ['销量']
+        },
+        series: [{
+          name: '销量',
+          type: 'pie',
+          data: this.itemSales
+        }]
+      }
+      myChart1.setOption(option)
     })
   }
 }

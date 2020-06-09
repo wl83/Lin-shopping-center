@@ -10,7 +10,7 @@
       <el-table
         :data="reviewList"
         style="width: 100%"
-        max-height="250">
+        max-height="">
         <el-table-column
           fixed
           prop="createdTime"
