@@ -36,7 +36,7 @@ class OrderCreate(SecureCustomerResource):
     def post(self, auth_customer):
         args = order_post_parser.parse_args()
 
-        if not Address.query.get(args.address_id):
+        if not Address.query.get:
             return {'message': 'Invalid address id'}, 400
 
         new_order = Order(status=Status.pending,
@@ -101,9 +101,9 @@ class OrderHisQuery(SecureCustomerResource):
 
         total = orders.count()
 
-        ordersPage = orders.paginate(page=1 + group, per_page=GROUP_COUNT)
+        # ordersPage = orders.paginate(page=1 + group, per_page=GROUP_COUNT)
         output = []
-        for order in ordersPage.items:
+        for order in orders:
             output.append(order.id)
 
         return {'orders': output, 'total': total}, 200
@@ -172,7 +172,7 @@ class OrderQueryShop(SecureShopResource):
         order_data['customer_id'] = order.customer_id
 
         if order.address_id:
-            address = Address.query.get(order.address_id)
+            address = Address.query.filter_by(id=order.address_id).first_or_404()
             address_data = {}
             address_data['receiver'] = address.receiver
             address_data['phone'] = address.phone

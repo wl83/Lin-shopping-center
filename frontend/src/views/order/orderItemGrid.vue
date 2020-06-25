@@ -22,8 +22,9 @@
         <span class="cart-order-item-number">x{{ orderItem.count }}</span>
       </div>
       <div class="cart-order-review-container">
-         <el-button @click="onRviewClicked(orderItem)" type="success" plain>评价</el-button>
-      </div>
+        <el-button v-if="!orderItem.deleted" @click="onRviewClicked(orderItem)" type="success" plain>评价</el-button>
+        <span v-if="orderItem.deleted">已下架</span>
+        </div>
     </div>
     <div style="height: 100px;"></div>
   </div>
@@ -113,5 +114,8 @@ export default {
   float: right;
   right: 2%;
   position: relative;
+}
+.cart-order-review-container span{
+  color: rgb(212, 0, 0);
 }
 </style>

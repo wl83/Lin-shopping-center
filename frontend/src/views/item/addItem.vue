@@ -122,7 +122,7 @@ export default {
     addHead () {
       const tmp = []
       this.images.forEach(item => {
-        tmp.push({ content: 'data:image/jpeg;base64,' + item, file: {} })
+        tmp.push({ content: 'data:image;base64,' + item, file: {} })
       })
       return tmp
     },
@@ -171,16 +171,15 @@ export default {
     },
     onAddItemClicked () {
       for (var i = this.images.length; i >= 0; i -= 2) {
-        if (i > 0) {
+        if (i > 1) {
           this.images.pop()
         }
       }
-      console.log(this.images.length)
-      alert('!!!')
       this.$refs.addItemFormRef.validate(async valid => {
         if (!valid) {
           return
         }
+        console.log(this.images.length)
         if (this.images.length === 0) {
           return this.$message.error('至少上传一张图片')
         }
@@ -220,7 +219,7 @@ export default {
             }
           }).then(() => {
             this.$message('更新成功')
-            this.$router.push('/shop/items')
+            this.$router.push({ name: 'shopItems', params: { shopId: this.shopId } })
           }).catch(err => {
             console.log(err)
           })
@@ -244,6 +243,9 @@ export default {
           this.addItemForm.itemClass = response.data.item_class
           this.images = response.data.images
           this.addItemForm.imageList = this.addHead(this.images)
+        })
+        .then(() => {
+          console.log(this.images.length)
         })
         .catch(err => {
           if (err.response.status === 401) {

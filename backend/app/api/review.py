@@ -120,9 +120,9 @@ class ReviewSearch(Resource):
 
         total = reviewQuery.count()
 
-        reviews = reviewQuery.paginate(page=1 + group_index, per_page=GROUP_COUNT)
+        # reviews = reviewQuery.paginate(page=1 + group_index, per_page=GROUP_COUNT)
         output = []
-        for review in reviews.items:
+        for review in reviewQuery:
             output.append(review.id)
 
         return {'review_ids': output, 'total': total}, 200

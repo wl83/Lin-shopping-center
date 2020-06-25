@@ -120,8 +120,8 @@ export default {
         this.$router.push('customer/login')
       }
     })
-    console.log(this.nickname)
   }
+
 }
 </script>
 

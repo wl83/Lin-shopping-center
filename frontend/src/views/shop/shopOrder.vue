@@ -96,7 +96,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="收货地址" :visible.sync="dialogTableVisible1">
+    <el-dialog title="订单详情" :visible.sync="dialogTableVisible1">
       <el-table :data="orderDetailTable">
         <el-table-column property="name" label="商品名" width="150"></el-table-column>
         <el-table-column property="itemId" label="商品ID" width="100"></el-table-column>
@@ -218,7 +218,7 @@ export default {
       }
     },
     filterTag (value, row) {
-      return row.tag === value
+      return row.status === value
     },
     filterHandler (value, row, column) {
       const property = column.property
@@ -236,14 +236,13 @@ export default {
       this.orders = response.data.orders
 
       this.orders.forEach(order => {
-        const orderTemp = {}
-
+        const orderTemp = { orderId: order.order_id }
+        this.orderList.push(orderTemp)
         this.$http.get('shop/orders/' + order.order_id, {
           headers: {
             Authorization: window.sessionStorage.getItem('shoptoken')
           }
         }).then(response => {
-          orderTemp.orderId = order.order_id
           orderTemp.createdTime = response.data.created_time
           orderTemp.paymentAmount = order.price
           orderTemp.name = response.data.address.receiver
@@ -252,7 +251,7 @@ export default {
           orderTemp.status = this.orderStatus[response.data.status]
           orderTemp.items = order.items
 
-          this.orderList.push(orderTemp)
+          this.orderList = this.orderList.splice(0)
         })
       })
     })

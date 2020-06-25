@@ -34,7 +34,7 @@ class Cart(SecureCustomerResource):
         """
         args = cart_post_parser.parse_args()
 
-        if not Item.query.get(args.item_id):
+        if not Item.query.get:
             return {'message': 'Invalid item id'}, 400
 
         new_cart = CartItem(customer_id=auth_customer.id,

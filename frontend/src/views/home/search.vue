@@ -85,6 +85,12 @@ export default {
               console.log(err)
             })
         })
+      }).then(() => {
+        if (this.rankType === 3) {
+
+        } else if (this.rankType === 4) {
+
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -93,7 +99,7 @@ export default {
       this.search(this.itemName, this.rankType, 0)
     }
   },
-  mounted: function () {
+  mounted () {
     this.itemName = this.$route.query.itemName
     this.rankType = this.$route.query.rank
     this.onSearch()

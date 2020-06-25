@@ -92,6 +92,7 @@ class ItemQuery(Resource):
         item_data['info'] = item.info
         item_data['sales'] = item.sales
         item_data['item_class'] = item.item_class
+        item_data['deleted'] = item.deleted
 
         images = []
         for imgRecord in item.images:

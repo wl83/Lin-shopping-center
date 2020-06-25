@@ -78,10 +78,21 @@ export default {
     }
   },
   methods: {
+    isMobileNumber (phone) {
+      var flag = false
+      var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0-9]{1})|(15[0-3]{1})|(15[4-9]{1})|(18[0-9]{1})|(199))+\d{8})$/
+      if (myreg.test(phone)) {
+        flag = true
+      }
+      return flag
+    },
     updateShop () {
       this.$refs.shopManageFormRef.validate(async valid => {
         if (!valid) {
           return
+        }
+        if (!this.isMobileNumber(this.shopManageForm.phone)) {
+          return this.$message.error('手机号格式错误')
         }
         await this.$http.put('shop', {
           shop_id: this.shopId,

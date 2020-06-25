@@ -94,6 +94,7 @@ export default {
             orderItem.info = response.data.info
             orderItem.shopId = response.data.shop_id
             orderItem.images = response.data.images
+            orderItem.deleted = response.data.deleted
             this.orderItems.push(orderItem)
           })
           .catch(err => {

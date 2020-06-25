@@ -133,7 +133,6 @@ export default {
         this.items = []
         this.$parent.search(this.searchQuery.text, this.rank, this.groupIndexN)
         this.$emit('childFn', { items: this.items, rank: this.rank })
-        this.$route.query = { itemName: this.searchQuery.text }
       } else {
         this.$router.push({ name: 'search', query: { itemName: this.searchQuery.text, rank: this.rank } })
       }

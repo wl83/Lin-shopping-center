@@ -53,6 +53,7 @@ export default {
   mounted: function () {
     this.customerId = this.$route.params.customerId
     this.getReview()
+    console.log(this.reviewList)
   }
 }
 </script>
