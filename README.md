@@ -29,13 +29,21 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ## 后端环境搭建
+```
 cd backend
+```
+```
 source venv/bin/activate     #  MacOS
 activate.bat                         # Windows
+```
+```
 pip install -r requirement.txt
+```
 
 ### open server
+```
 flask run
+```
 
 
 
