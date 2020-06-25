@@ -32,14 +32,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```
 cd backend
 ```
+### Virtual environment 
 ```
 source venv/bin/activate     #  MacOS
 activate.bat                         # Windows
 ```
+### environmental requirement for production
 ```
 pip install -r requirement.txt
 ```
-
 ### open server
 ```
 flask run
